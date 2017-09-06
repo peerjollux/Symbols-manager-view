@@ -10,21 +10,30 @@ import ReactList from 'react-list';
 class AppComponent extends React.Component {
   state = {
     symbols: Symbols,
-    selected: [1, 1]
+    selected: []
   }
 
-  constructor(props) {
+  constructor(props){
     super(props);
-    this.props = props;
-    this.getSelectedList = this.getSelectedList.bind(this);
-    this.renderListItem = this.renderListItem.bind(this);
+    this.getItemPath = this.getItemPath.bind(this);
+    this.selectItem = this.selectItem.bind(this);
   }
 
   /**
   Sets state.select after clicking an item.
   */
-  selectItem(index) {
-    this.setState({selected: index})
+  selectItem(itemPath) {
+    this.setState({selected: itemPath});
+  }
+
+  getItemPath(index, columnIndex){
+    let { selected } = this.state;
+    let itemPath = [];
+    for(var i=0; i<=columnIndex - 1; i++){
+      itemPath.push(selected[i])
+    }
+    itemPath.push(index)
+    return itemPath;
   }
 
   /**
@@ -39,21 +48,21 @@ class AppComponent extends React.Component {
 
     if(columnIndex > 0 && columnIndex <= selected.length){
       for(var i=0; i<columnIndex && i<selected.length; i++){
-
-        if(selectedList[i].hasOwnProperty('children')){
-          selectedList = selectedList[i].children;
+        const id = selected[i]
+        if(selectedList[id].hasOwnProperty('children')){
+          selectedList = selectedList[id].children;
         } else {
-          selectedList = [ selectedList[i] ];
+          selectedList = [ selectedList[id] ];
         }
       }
-    } else if (columnIndex >= selected.length) {
+    } else if (columnIndex >= selected.length && columnIndex != 0) {
       selectedList = '';
     }
     return selectedList;
   }
 
   /**
-  * Renders list of list-items
+  * Renders list
   *
   * @param {number} columnIndex - Index provided by ReactList.
   * @param {number} key - Key provided by ReactList.
@@ -80,8 +89,10 @@ class AppComponent extends React.Component {
   */
   renderListItem(index, key, columnIndex) {
     const source = this.getSelectedList(columnIndex);
+    const itemPath = this.getItemPath(index, columnIndex);
+
     if(source[index]){
-      return <div key={key} onClick={() => this.selectItem(index)}>{source[index].name} on {columnIndex}</div>;
+      return <div key={key} onClick={() => this.selectItem(itemPath)}>{source[index].name} on {columnIndex}</div>;
     }
   }
 
@@ -101,6 +112,7 @@ class AppComponent extends React.Component {
   }
 
   render() {
+    console.log(this.state.selected);
     return (
       <div>
         <div className="axis-x">
