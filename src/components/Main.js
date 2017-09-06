@@ -10,8 +10,7 @@ import ReactList from 'react-list';
 class AppComponent extends React.Component {
   state = {
     symbols: Symbols,
-    selected: [],
-    selectedTest: [1, 1]
+    selected: [1, 1]
   }
 
   constructor(props) {
@@ -34,20 +33,21 @@ class AppComponent extends React.Component {
   @return {array} Array of objects (See state.symbols)
   */
   getSelectedList(columnIndex) {
-    let { selectedTest, symbols } = this.state;
+    let { selected, symbols } = this.state;
 
     let selectedList = symbols;
 
-    if(columnIndex > 0){
-      for(var i=0; i<columnIndex; i++){
-        let oldSelectedList = selectedList;
+    if(columnIndex > 0 && columnIndex <= selected.length){
+      for(var i=0; i<columnIndex && i<selected.length; i++){
 
-        if(i + 1 < selectedTest.length) {
-          selectedList = oldSelectedList[i].children;
+        if(selectedList[i].hasOwnProperty('children')){
+          selectedList = selectedList[i].children;
         } else {
-          selectedList = [ oldSelectedList[i] ];
+          selectedList = [ selectedList[i] ];
         }
       }
+    } else if (columnIndex >= selected.length) {
+      selectedList = '';
     }
     return selectedList;
   }
@@ -92,7 +92,7 @@ class AppComponent extends React.Component {
   * @param {number} key - Key provided by ReactList.
   * @return {jsx} Div with column containing a new list
   */
-  renderColumns(columnIndex, key) {
+  renderColumn(columnIndex, key) {
     return (
       <div key={key} className="item">
         { this.renderList(columnIndex) }
@@ -105,7 +105,7 @@ class AppComponent extends React.Component {
       <div>
         <div className="axis-x">
           <ReactList
-            itemRenderer={::this.renderColumns}
+            itemRenderer={::this.renderColumn}
             length='4'
             axis='x'
             type='uniform'
