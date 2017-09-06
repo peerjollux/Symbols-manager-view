@@ -1,0 +1,29 @@
+/* Base Application Styles */
+body {
+
+}
+
+.index img {
+  margin: 40px auto;
+  border-radius: 4px;
+  background: #fff;
+  display: block;
+}
+
+.index .notice {
+  margin: 20px auto;
+  padding: 15px 0;
+  text-align: center;
+  border: 1px solid #000;
+  border-width: 1px 0;
+  background: #666;
+}
+
+
+
+.axis-x .item {
+  display: inline-block;
+  padding: 20px;
+  width: 150px;
+  border-right: 1px solid #eee;
+}
