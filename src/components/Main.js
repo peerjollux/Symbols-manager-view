@@ -82,6 +82,7 @@ class AppComponent extends React.Component {
   getListItem(index, columnIndex) {
     const list = this.getList(columnIndex);
     const listItem = list[index];
+    const listItem['path'] = this.getListItemPath(index, columnIndex); //Add item path to Item object;
 
     return listItem;
   }
@@ -105,8 +106,7 @@ class AppComponent extends React.Component {
   */
   renderListItem(index, key, columnIndex) {
     const item = this.getListItem(index, columnIndex);
-    const itemPath = this.getListItemPath(index, columnIndex);
-    const onClick = () => this.selectListItem(itemPath, item.type);
+    const onClick = () => this.selectListItem(item.itemPath, item.type);
 
     if(item){
       return <ListItem key={key} onClick={onClick} data={item}/>;
