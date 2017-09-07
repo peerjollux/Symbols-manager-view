@@ -1,6 +1,14 @@
 /* Base Application Styles */
-body {
+body, html {
+  height: 100%;
+}
 
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+}
+
+#app, [data-reactroot] {
+  height: 100%!important;
 }
 
 .index img {
@@ -10,20 +18,22 @@ body {
   display: block;
 }
 
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  background: #666;
+.columns-wrapper {
+  height: 100%;
 }
 
-
-
-.axis-x .item {
+.columns-wrapper__column {
   display: inline-block;
   padding: 20px;
   width: 150px;
   border-right: 1px solid #eee;
+  height: 100%;
+}
+
+
+.listItem {
+  font-size: 14px;
+  line-height: 26px;
+  color: #171717;
+  height: 36px;
 }

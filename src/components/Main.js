@@ -26,6 +26,14 @@ class AppComponent extends React.Component {
     this.setState({selected: itemPath});
   }
 
+  isSelected(index, columnIndex) {
+    const { selected } = this.state;
+
+    if(index == selected[columnIndex]){
+      return true;
+    }
+  }
+
   getItemPath(index, columnIndex){
     let { selected } = this.state;
     let itemPath = [];
@@ -73,7 +81,7 @@ class AppComponent extends React.Component {
       <ReactList
         itemRenderer={(index, key) => this.renderListItem(index, key, columnIndex)}
         key= {key}
-        length={this.state.symbols.length}
+        length={4}
         type='uniform'
       />
     );
@@ -90,9 +98,19 @@ class AppComponent extends React.Component {
   renderListItem(index, key, columnIndex) {
     const source = this.getSelectedList(columnIndex);
     const itemPath = this.getItemPath(index, columnIndex);
+    const item = source[index];
 
-    if(source[index]){
-      return <div key={key} onClick={() => this.selectItem(itemPath)}>{source[index].name} on {columnIndex}</div>;
+    if(item){
+
+      let classNames = 'listItem--symbol';
+      let onClick = '';
+
+      if(item.type == 'folder') {
+        classNames = 'listItem--folder';
+        onClick = () => this.selectItem(itemPath);
+      }
+
+      return <div key={key} onClick={onClick} className={'listItem ' + classNames} >{item.name}</div>;
     }
   }
 
@@ -105,20 +123,21 @@ class AppComponent extends React.Component {
   */
   renderColumn(columnIndex, key) {
     return (
-      <div key={key} className="item">
+      <div key={key} className="columns-wrapper__column">
         { this.renderList(columnIndex) }
       </div>
     );
   }
 
   render() {
-    console.log(this.state.selected);
+    const { selected } = this.state;
+    const columns = selected.length + 1;
     return (
       <div>
-        <div className="axis-x">
+        <div className="columns-wrapper">
           <ReactList
             itemRenderer={::this.renderColumn}
-            length='4'
+            length={columns}
             axis='x'
             type='uniform'
           />
