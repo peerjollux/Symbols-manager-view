@@ -15,14 +15,13 @@ class AppComponent extends React.Component {
 
   constructor(props){
     super(props);
-    this.getItemPath = this.getItemPath.bind(this);
-    this.selectItem = this.selectItem.bind(this);
+    this.getListItemPath = this.getListItemPath.bind(this);
   }
 
   /**
   Sets state.select after clicking an item.
   */
-  selectItem(itemPath) {
+  selectListItem(itemPath) {
     this.setState({selected: itemPath});
   }
 
@@ -34,7 +33,7 @@ class AppComponent extends React.Component {
     }
   }
 
-  getItemPath(index, columnIndex){
+  getListItemPath(index, columnIndex){
     let { selected } = this.state;
     let itemPath = [];
     for(var i=0; i<=columnIndex - 1; i++){
@@ -49,7 +48,7 @@ class AppComponent extends React.Component {
 
   @return {array} Array of objects (See state.symbols)
   */
-  getSelectedList(columnIndex) {
+  getList(columnIndex) {
     let { selected, symbols } = this.state;
 
     let selectedList = symbols;
@@ -67,6 +66,18 @@ class AppComponent extends React.Component {
       selectedList = '';
     }
     return selectedList;
+  }
+
+  /**
+  Get list item
+
+  @return {object} Object with specific item
+  */
+  getListItem(index, columnIndex) {
+    const list = this.getList(columnIndex);
+    const listItem = list[index];
+
+    return listItem;
   }
 
   /**
@@ -96,18 +107,18 @@ class AppComponent extends React.Component {
   * @return {jsx} Div with list item.
   */
   renderListItem(index, key, columnIndex) {
-    const source = this.getSelectedList(columnIndex);
-    const itemPath = this.getItemPath(index, columnIndex);
-    const item = source[index];
+
+    const item = this.getListItem(index, columnIndex);
+    const itemPath = this.getListItemPath(index, columnIndex);
 
     if(item){
 
       let classNames = 'listItem--symbol';
-      let onClick = '';
+      let onClick = null;
 
       if(item.type == 'folder') {
         classNames = 'listItem--folder';
-        onClick = () => this.selectItem(itemPath);
+        onClick = () => this.selectListItem(itemPath);
       }
 
       return <div key={key} onClick={onClick} className={'listItem ' + classNames} >{item.name}</div>;
