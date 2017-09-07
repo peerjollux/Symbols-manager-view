@@ -1,9 +1,8 @@
 import React from 'react'
 
-
 const ListItem = props => {
 
-  const { data, itemKey, onClick } = props;
+  const { data, itemKey, onClick, selected } = props;
   const { type, name } = data;
 
   // Setting the className
@@ -11,6 +10,9 @@ const ListItem = props => {
 
   if(type){
     classNames.push('listItem--'+type);
+  }
+  if(selected){
+    classNames.push('listItem--selected');
   }
 
   classNames = classNames.join(' ');

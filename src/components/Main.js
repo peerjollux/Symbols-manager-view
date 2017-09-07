@@ -22,9 +22,7 @@ class AppComponent extends React.Component {
   * selectListItem() sets state.selected to the provided path
   */
   selectListItem(itemPath, type) {
-    if(type == 'folder'){
-      this.setState({selected: itemPath});
-    }
+    this.setState({selected: itemPath});
   }
 
   /**
@@ -37,6 +35,7 @@ class AppComponent extends React.Component {
     if(index == selected[columnIndex]){
       return true;
     }
+    return false;
   }
 
   /**
@@ -58,21 +57,27 @@ class AppComponent extends React.Component {
    */
   getList(columnIndex) {
     let { selected, symbols } = this.state;
-
     let selectedList = symbols;
+    let columns = selected.length + 1;
 
-    if(columnIndex > 0 && columnIndex <= selected.length){
-      for(var i=0; i<columnIndex && i<selected.length; i++){
+
+    if(columnIndex > 0 && columnIndex <= columns){
+      for(var i=0; i<columnIndex && i< columns; i++){
         const id = selected[i]
-        if(selectedList[id].hasOwnProperty('children')){
-          selectedList = selectedList[id].children;
-        } else {
-          selectedList = [ selectedList[id] ];
+
+        switch(selectedList[id].type) {
+          case 'folder':
+            selectedList = selectedList[id].children;
+            break;
+          case 'symbol':
+            selectedList = [ selectedList[id] ];
+            break;
+          default:
+            selectedList = '';
         }
       }
-    } else if (columnIndex >= selected.length && columnIndex != 0) {
-      selectedList = '';
     }
+
     return selectedList;
   }
 
@@ -82,7 +87,9 @@ class AppComponent extends React.Component {
   getListItem(index, columnIndex) {
     const list = this.getList(columnIndex);
     const listItem = list[index];
-    const listItem['path'] = this.getListItemPath(index, columnIndex); //Add item path to Item object;
+    if(listItem) {
+      listItem.path = this.getListItemPath(index, columnIndex); //Add item path to Item object
+    }
 
     return listItem;
   }
@@ -106,10 +113,12 @@ class AppComponent extends React.Component {
   */
   renderListItem(index, key, columnIndex) {
     const item = this.getListItem(index, columnIndex);
-    const onClick = () => this.selectListItem(item.itemPath, item.type);
+    const isSelected = this.isSelected(index, columnIndex);
 
     if(item){
-      return <ListItem key={key} onClick={onClick} data={item}/>;
+      const onClick = () => this.selectListItem(item.path, item.type);
+
+      return <ListItem key={key} onClick={onClick} data={item} selected={isSelected}/>;
     }
   }
 
@@ -137,7 +146,6 @@ class AppComponent extends React.Component {
             type='uniform'
           />
         </div>
-        <ListItem data={{name: 'test'}} />
       </div>
     );
   }

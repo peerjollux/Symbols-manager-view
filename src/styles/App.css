@@ -19,8 +19,7 @@ body {
 
 .columns-wrapper__column {
   display: inline-block;
-  padding: 20px;
-  width: 150px;
+  width: 200px;
   border-right: 1px solid #eee;
   height: 100%;
 }
@@ -31,4 +30,26 @@ body {
   line-height: 26px;
   color: #171717;
   height: 36px;
+  line-height: 36px;
+  padding: 0 20px;
+  margin-right: -1px;
+  border-right: 1px solid transparant;
+}
+
+.listItem--folder {
+  background-image: url('../images/arrow-right-grey.png');
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+}
+
+.listItem--folder.listItem--selected{
+  background-image: url('../images/arrow-right-white.png');
+}
+
+
+
+.listItem--selected {
+  background-color: #5098FB;
+  color: #fff;
+  border-right: 1px solid #4890f3;
 }
