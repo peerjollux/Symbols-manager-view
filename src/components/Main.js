@@ -4,7 +4,7 @@ require('styles/App.css');
 import React from 'react';
 import Symbols from '../sources/Symbols'
 import ReactList from 'react-list';
-
+import ListItem from './ListItem'
 
 
 class AppComponent extends React.Component {
@@ -19,12 +19,18 @@ class AppComponent extends React.Component {
   }
 
   /**
-  Sets state.select after clicking an item.
+  * selectListItem() sets state.selected to the provided path
   */
-  selectListItem(itemPath) {
-    this.setState({selected: itemPath});
+  selectListItem(itemPath, type) {
+    if(type == 'folder'){
+      this.setState({selected: itemPath});
+    }
   }
 
+  /**
+  * selectListItem() returns a boolean
+  * to show if the listItem is selected yes or no.
+  */
   isSelected(index, columnIndex) {
     const { selected } = this.state;
 
@@ -33,6 +39,10 @@ class AppComponent extends React.Component {
     }
   }
 
+  /**
+   * getListItemPath() returns a array with indexes.
+   * This array is the path in the symbols object.
+   */
   getListItemPath(index, columnIndex){
     let { selected } = this.state;
     let itemPath = [];
@@ -44,10 +54,8 @@ class AppComponent extends React.Component {
   }
 
   /**
-  Function to get a right objects array for right column.
-
-  @return {array} Array of objects (See state.symbols)
-  */
+   * getList() returns a array of listItem objects
+   */
   getList(columnIndex) {
     let { selected, symbols } = this.state;
 
@@ -69,10 +77,8 @@ class AppComponent extends React.Component {
   }
 
   /**
-  Get list item
-
-  @return {object} Object with specific item
-  */
+   * getListItem() returns a object of a listItem
+   */
   getListItem(index, columnIndex) {
     const list = this.getList(columnIndex);
     const listItem = list[index];
@@ -82,16 +88,12 @@ class AppComponent extends React.Component {
 
   /**
   * Renders list
-  *
-  * @param {number} columnIndex - Index provided by ReactList.
-  * @param {number} key - Key provided by ReactList.
-  * @return {jsx} ReactList component
   */
   renderList(columnIndex, key){
     return (
       <ReactList
         itemRenderer={(index, key) => this.renderListItem(index, key, columnIndex)}
-        key= {key}
+        itemKey= {key}
         length={4}
         type='uniform'
       />
@@ -100,37 +102,19 @@ class AppComponent extends React.Component {
 
   /**
   * Function to get a right objects array for right column.
-  *
-  * @param {number} index - Index provided by ReactList.
-  * @param {number} key - Key provided by ReactList.
-  * @param {number} columnIndex -   Index of current column.
-  * @return {jsx} Div with list item.
   */
   renderListItem(index, key, columnIndex) {
-
     const item = this.getListItem(index, columnIndex);
     const itemPath = this.getListItemPath(index, columnIndex);
+    const onClick = () => this.selectListItem(itemPath, item.type);
 
     if(item){
-
-      let classNames = 'listItem--symbol';
-      let onClick = null;
-
-      if(item.type == 'folder') {
-        classNames = 'listItem--folder';
-        onClick = () => this.selectListItem(itemPath);
-      }
-
-      return <div key={key} onClick={onClick} className={'listItem ' + classNames} >{item.name}</div>;
+      return <ListItem key={key} onClick={onClick} data={item}/>;
     }
   }
 
   /**
   * Renders columns
-  *
-  * @param {number} columnIndex - Index provided by ReactList.
-  * @param {number} key - Key provided by ReactList.
-  * @return {jsx} Div with column containing a new list
   */
   renderColumn(columnIndex, key) {
     return (
@@ -153,6 +137,7 @@ class AppComponent extends React.Component {
             type='uniform'
           />
         </div>
+        <ListItem data={{name: 'test'}} />
       </div>
     );
   }
