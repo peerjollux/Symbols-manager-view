@@ -25,6 +25,27 @@ class AppComponent extends React.Component {
     this.setState({selected: itemPath});
   }
 
+  getSelectedItem(){
+    const { selected, symbols } = this.state;
+    let selectedList = symbols;
+
+    if( selected.length != 0){
+      let count = 0;
+
+      for (var id of selected) {
+        count++
+
+        selectedList = selectedList[id]
+
+        if(count < selected.length) {
+          selectedList = selectedList.children
+        }
+      }
+      return selectedList;
+    }
+
+    return false;
+  }
   /**
   * selectListItem() returns a boolean
   * to show if the listItem is selected yes or no.
@@ -143,6 +164,7 @@ class AppComponent extends React.Component {
     const columns = selected.length + 1;
     return (
       <div>
+        <button onClick= {()=>this.renameItem()} >rename</button>
         <div className="columns-wrapper">
           <ReactList
             itemRenderer={::this.renderColumn}
