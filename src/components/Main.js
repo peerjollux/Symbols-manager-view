@@ -6,6 +6,8 @@ import Symbols from '../sources/Symbols'
 import ReactList from 'react-list';
 import ListItem from './ListItem'
 
+const resolvePath = require('object-resolve-path');
+
 
 class AppComponent extends React.Component {
   state = {
@@ -18,33 +20,72 @@ class AppComponent extends React.Component {
     this.getListItemPath = this.getListItemPath.bind(this);
   }
 
+  renameItem(){
+    const { selected } = this.state;
+    const selectedItem = this.getSelectedItem()
+
+    var newName = prompt('Enter new title', selectedItem.name);
+
+    if (newName != null) {
+      this.saveItem(selected, newName)
+    }
+  }
+
+  saveItem(itemPath, name){
+    const { symbols } = this.state;
+
+    let symbolsPath = '';
+    if( itemPath.length != 0){
+      let count = 0;
+
+      for (var id of itemPath) {
+        count++
+        symbolsPath += '['+id+']';
+
+        if(count < itemPath.length) {
+          symbolsPath += ['.children']
+        }
+      }
+      
+      const item = resolvePath(symbols, symbolsPath);
+      item.name = name;
+
+      this.setState({symbols});
+    }
+  }
+
   /**
   * selectListItem() sets state.selected to the provided path
   */
-  selectListItem(itemPath, type) {
+  selectListItem(itemPath) {
     this.setState({selected: itemPath});
   }
 
-  getSelectedItem(){
-    const { selected, symbols } = this.state;
+  getItem(itemPath){
+    const { symbols } = this.state;
     let selectedList = symbols;
 
-    if( selected.length != 0){
+    if( itemPath.length != 0){
       let count = 0;
 
-      for (var id of selected) {
+      for (var id of itemPath) {
         count++
-
         selectedList = selectedList[id]
 
-        if(count < selected.length) {
+        if(count < itemPath.length) {
           selectedList = selectedList.children
         }
       }
       return selectedList;
     }
 
-    return false;
+    return 'false';
+  }
+
+  getSelectedItem(){
+    const { selected } = this.state;
+    const selectedItem = this.getItem(selected);
+    return selectedItem;
   }
   /**
   * selectListItem() returns a boolean
