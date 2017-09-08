@@ -60,21 +60,26 @@ class AppComponent extends React.Component {
     let selectedList = symbols;
     let columns = selected.length + 1;
 
-
     if(columnIndex > 0 && columnIndex <= columns){
       for(var i=0; i<columnIndex && i< columns; i++){
         const id = selected[i]
+        const type = selectedList[id].type;
 
-        switch(selectedList[id].type) {
-          case 'folder':
-            selectedList = selectedList[id].children;
-            break;
-          case 'symbol':
-            selectedList = [ selectedList[id] ];
-            break;
-          default:
-            selectedList = '';
+        // Return array of various symbols objects
+        if(type=='folder'){
+          selectedList = selectedList[id].children;
         }
+
+        // Return array with one symbol object
+        if(type=='symbol'){
+          selectedList = [selectedList[id]];
+        }
+
+        // Return empty list if the second last item a symbol. Otherwise the list keeps expanding.
+        if(type=='symbol' && columns - 2 == i){
+          selectedList = [];
+        }
+
       }
     }
 
