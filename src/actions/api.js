@@ -1,56 +1,65 @@
 const resolvePath = require('object-resolve-path');
 
 /**
- * getListItem() returns a object of a listItem
+ * getList() returns a array of a item objects.
  */
-
 export const getList = (state, props) => {
-
   const { symbols, selected } = state;
   const { columnIndex } = props;
-  let selectedList = symbols;
 
-  if(columnIndex > 0 && columnIndex <= selected.length){
-   for(var i=0; i<columnIndex && i<selected.length; i++){
-     const id = selected[i]
-     if(selectedList[id].hasOwnProperty('children')){
-       selectedList = selectedList[id].children;
-     } else {
-       selectedList = [ selectedList[id] ];
-     }
-   }
-  } else if (columnIndex >= selected.length && columnIndex != 0) {
-   selectedList = '';
+  let symbolsPath = '';
+  ;
+  if ( columnIndex > 0) {
+
+    for(var columns=0; columns < columnIndex && columns < selected.length; columns++ ){
+      const id = selected[columns];
+      symbolsPath += '[' + id + ']';
+      console.log(symbolsPath)
+
+      const temp = resolvePath(symbols, symbolsPath);
+      if (temp.children) {
+        symbolsPath += '.children';
+      }
+    }
+
+    const list = resolvePath(symbols, symbolsPath);
+    return list;
   }
-  return selectedList;
+  return symbols;
 }
 
-
+/**
+ * getItemByColumn() returns a item object.
+ * Object can be found by proving a column- and row-index.
+ */
 export const getItemByColumn = (state, props) => {
-  const { index, columnIndex } = props;
+  const { rowIndex } = props;
   const list = getList(state, props);
-  const listItem = list[index];
-  if(listItem) {
+  const listItem = list[rowIndex];
+  if (listItem) {
     listItem.path = getListItemPath(state, props); //Add item path to Item object
   }
   return listItem;
 }
 
-
+/**
+ * getItemByColumn() returns a item object.
+ * Object can be found by proving a column- and row-index.
+ */
 export const getItemById = (state, props) => {
   const { symbols } = state;
   const { itemPath } = props;
 
   let selectedList = symbols;
 
-  if( itemPath.length != 0){
+  if (itemPath.length != 0) {
     let count = 0;
 
     for (var id of itemPath) {
       count++
       selectedList = selectedList[id]
 
-      if(count < itemPath.length) {
+      if (count < itemPath.length) {
         selectedList = selectedList.children
       }
     }
@@ -65,65 +74,86 @@ export const getItemById = (state, props) => {
  * This array is the path in the symbols object.
  */
 export const getListItemPath = (state, props) => {
-  const { selected } = state;
-  const { index, columnIndex } = props;
+  const {
+    selected
+  } = state;
+  const {
+    rowIndex,
+    columnIndex
+  } = props;
 
   let itemPath = [];
-  for(var i=0; i<=columnIndex - 1; i++){
+  for (var i = 0; i <= columnIndex - 1; i++) {
     itemPath.push(selected[i])
   }
-  itemPath.push(index)
+  itemPath.push(rowIndex)
 
   return itemPath;
 }
 
 
-export const renameItem = (state, props) => {
-  const { selected } = state;
+export const renameItem = (state) => {
+  const {
+    selected
+  } = state;
   const selectedItem = getSelectedItem(state)
 
   var name = prompt('Enter new title', selectedItem.name);
 
   if (name != null) {
-    saveItem(state, {itemPath: selected, name})
+    saveItem(state, {
+      itemPath: selected,
+      name
+    })
   }
 }
 
-/**
- * getListItemPath() returns a array with indexes.
- * This array is the path in the symbols object.
- */
-export const isSelected = (state, props) => {
-  const { selected } = state;
-  const { index, columnIndex } = props;
 
-  if(index == selected[columnIndex]){
+export const isSelected = (state, props) => {
+  const {
+    selected
+  } = state;
+  const {
+    rowIndex,
+    columnIndex
+  } = props;
+
+  if (rowIndex == selected[columnIndex]) {
     return true;
   }
   return false;
 }
 
 export const getSelectedItem = (state) => {
-  const { selected } = state;
-  const selectedItem = getItemById(state, {itemPath: selected});
+  const {
+    selected
+  } = state;
+  const selectedItem = getItemById(state, {
+    itemPath: selected
+  });
   return selectedItem;
 }
 
 export const saveItem = (state, props) => {
-  const { symbols } = state;
-  const { itemPath, name } = props;
+  const {
+    symbols
+  } = state;
+  const {
+    itemPath,
+    name
+  } = props;
 
 
   let symbolsPath = '';
 
-  if( itemPath.length != 0){
+  if (itemPath.length != 0) {
     let count = 0;
 
     for (var id of itemPath) {
       count++
-      symbolsPath += '['+id+']';
+      symbolsPath += '[' + id + ']';
 
-      if(count < itemPath.length) {
+      if (count < itemPath.length) {
         symbolsPath += ['.children']
       }
     }
