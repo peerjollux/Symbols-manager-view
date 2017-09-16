@@ -8,13 +8,11 @@ export const getList = (state, props) => {
   const { columnIndex } = props;
 
   let symbolsPath = '';
-  ;
   if ( columnIndex > 0) {
 
     for(var columns=0; columns < columnIndex && columns < selected.length; columns++ ){
       const id = selected[columns];
       symbolsPath += '[' + id + ']';
-      console.log(symbolsPath)
 
       const temp = resolvePath(symbols, symbolsPath);
       if (temp.children) {
@@ -74,13 +72,8 @@ export const getItemById = (state, props) => {
  * This array is the path in the symbols object.
  */
 export const getListItemPath = (state, props) => {
-  const {
-    selected
-  } = state;
-  const {
-    rowIndex,
-    columnIndex
-  } = props;
+  const { selected } = state;
+  const { rowIndex, columnIndex } = props;
 
   let itemPath = [];
   for (var i = 0; i <= columnIndex - 1; i++) {
@@ -93,9 +86,7 @@ export const getListItemPath = (state, props) => {
 
 
 export const renameItem = (state) => {
-  const {
-    selected
-  } = state;
+  const { selected } = state;
   const selectedItem = getSelectedItem(state)
 
   var name = prompt('Enter new title', selectedItem.name);
@@ -108,15 +99,9 @@ export const renameItem = (state) => {
   }
 }
 
-
 export const isSelected = (state, props) => {
-  const {
-    selected
-  } = state;
-  const {
-    rowIndex,
-    columnIndex
-  } = props;
+  const { selected } = state;
+  const { rowIndex, columnIndex } = props;
 
   if (rowIndex == selected[columnIndex]) {
     return true;
@@ -125,23 +110,14 @@ export const isSelected = (state, props) => {
 }
 
 export const getSelectedItem = (state) => {
-  const {
-    selected
-  } = state;
-  const selectedItem = getItemById(state, {
-    itemPath: selected
-  });
+  const { selected } = state;
+  const selectedItem = getItemById(state, { itemPath: selected });
   return selectedItem;
 }
 
 export const saveItem = (state, props) => {
-  const {
-    symbols
-  } = state;
-  const {
-    itemPath,
-    name
-  } = props;
+  const { symbols } = state;
+  const { itemPath, name } = props;
 
 
   let symbolsPath = '';
