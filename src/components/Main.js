@@ -58,6 +58,7 @@ class AppComponent extends React.Component {
   getItemByColumn(props) {
     return API.getItemByColumn(this.state, props);
   }
+<<<<<<< HEAD
 =======
   /* Connectin API to helper functions */
   getList         = (props) => ( API.getList(this.state, props) )
@@ -67,6 +68,18 @@ class AppComponent extends React.Component {
   /* Local helper functions */
   selectListItem(props) {
     this.setState({selected: props.path});
+=======
+
+  /**
+   * getListItem() returns a object of a listItem
+   */
+  getListItem(index, columnIndex) {
+    const list = this.getList(columnIndex);
+    const listItem = list[index];
+    const listItem['path'] = this.getListItemPath(index, columnIndex); //Add item path to Item object;
+
+    return listItem;
+>>>>>>> 951808c4f4e7656a3eb7f5a08c25c066a39c09ab
   }
 
 <<<<<<< HEAD
@@ -81,6 +94,7 @@ class AppComponent extends React.Component {
   selectListItem(props) {
     this.setState({selected: props.path});
   }
+<<<<<<< HEAD
 >>>>>>> 7bf4f22... Fixed empty column bug
 
     if (item) {
@@ -94,6 +108,18 @@ class AppComponent extends React.Component {
           selected = { isSelected }
         />
       );
+=======
+
+  /**
+  * Function to get a right objects array for right column.
+  */
+  renderListItem(index, key, columnIndex) {
+    const item = this.getListItem(index, columnIndex);
+    const onClick = () => this.selectListItem(item.itemPath, item.type);
+
+    if(item){
+      return <ListItem key={key} onClick={onClick} data={item}/>;
+>>>>>>> 951808c4f4e7656a3eb7f5a08c25c066a39c09ab
     }
   }
 
