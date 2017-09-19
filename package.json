@@ -66,6 +66,8 @@
     "normalize.css": "^4.0.0",
     "object-resolve-path": "^1.1.1",
     "react": "^15.0.0",
+    "react-dnd": "^2.5.1",
+    "react-dnd-html5-backend": "^2.5.1",
     "react-dom": "^15.0.0",
     "react-dragula": "^1.1.17",
     "react-keydown": "^1.9.4"

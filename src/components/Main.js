@@ -4,7 +4,10 @@ require('styles/App.css');
 import React from 'react';
 import Symbols from '../sources/Symbols'
 import ListItem from './ListItem'
+import Column from './Column'
 import * as API from '../actions/api'
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 class AppComponent extends React.Component {
 
@@ -52,7 +55,7 @@ class AppComponent extends React.Component {
 
     if(list){
       return (
-        <div className={'column'} ref={'column'+columnIndex} key={columnIndex} >
+        <Column className={'column'} ref={'column'+columnIndex} columnIndex={columnIndex} key={columnIndex} >
           { list.map( (item, rowIndex) => {
             const selected = (selectedItem === rowIndex)
             return (
@@ -65,7 +68,7 @@ class AppComponent extends React.Component {
               />
             )
           })}
-        </div>
+        </Column>
       );
     }
   }
@@ -79,4 +82,4 @@ class AppComponent extends React.Component {
   }
 }
 
-export default AppComponent;
+export default DragDropContext(HTML5Backend)(AppComponent)

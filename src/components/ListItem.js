@@ -1,35 +1,64 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { DragSource } from 'react-dnd';
+import ItemTypes from '../contstants/ItemTypes'
 
-const ListItem = props => {
-
-  const { data, itemKey, selected, onClick, onMouseDown } = props;
-  const { type, name } = data;
-
-  // Setting the className
-  let classNames = ['listItem']
-
-  if(type){
-    classNames.push('listItem--'+type);
+const listItemSource = {
+  beginDrag: function(){
+    return {};
   }
+}
 
-  if(selected){
-    classNames.push('listItem--selected');
+function collect(connect, monitor) {
+  return(
+    {
+      connectDragSource: connect.dragSource(),
+      isDragging: monitor.isDragging()
+    }
+  )
+}
+
+class ListItem extends Component {
+
+
+  render(){
+    const {
+      data,
+      selected,
+      onClick,
+      onMouseDown,
+      connectDragSource,
+      isDragging
+    } = this.props;
+    const { type, name } = data;
+
+
+    // Setting the className
+    let classNames = ['listItem']
+
+    if(type){
+      classNames.push('listItem--'+type);
+    }
+
+    if(selected){
+      classNames.push('listItem--selected');
+    }
+
+    classNames = classNames.join(' ');
+
+    return connectDragSource(
+      <div
+        className={classNames}
+        onClick = {onClick}
+        onMouseDown = {onMouseDown}
+        style={{
+          opacity: isDragging ? 0.9 : 1,
+        }}
+      >
+        {name}
+      </div>
+    );
   }
-
-  classNames = classNames.join(' ');
-
-
-  return (
-    <div
-      key={itemKey}
-      className={classNames}
-      onClick = {onClick}
-      onMouseDown = {onMouseDown}
-    >
-      {name}
-    </div>
-  );
 }
 
 
-export default ListItem;
+export default DragSource(ItemTypes.LISTITEM, listItemSource, collect)(ListItem);
