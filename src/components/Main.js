@@ -2,12 +2,10 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
+import Dragula from 'react-dragula'
 import Symbols from '../sources/Symbols'
 import ListItem from './ListItem'
-// import KeyboardEvents from '../actions/KeyboardEvents'
-// import { selectNext } from '../actions/selecting'
 import * as API from '../actions/api'
-
 
 class AppComponent extends React.Component {
 
@@ -22,11 +20,11 @@ class AppComponent extends React.Component {
   getColumns      = ()      => ( API.getColumns(this.state) )
 
 
-  /* Local helper functions */
   selectListItem(props) {
     this.setState({selected: props.path});
   }
 
+  /* Render helper functions */
   renderColumns(){
     const columns = this.getColumns()
     const { selected } = this.state;
@@ -51,7 +49,7 @@ class AppComponent extends React.Component {
 
     if(list){
       return (
-        <div className='column' key={columnIndex}>
+        <div className='column' key={columnIndex} ref={this.dragulaDecorator}>
           { list.map( (item, rowIndex) => {
             const selected = (selectedItem === rowIndex)
             return (
@@ -68,8 +66,14 @@ class AppComponent extends React.Component {
     }
   }
 
-  render() {
+  dragulaDecorator(componentBackingInstance){
+    if (componentBackingInstance) {
+      let options = { };
+      Dragula([componentBackingInstance], options);
+    }
+  };
 
+  render() {
     return (
       <div className='columns-wrapper'>
         { this.renderColumns() }
