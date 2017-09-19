@@ -12,14 +12,19 @@ import * as API from '../actions/api'
 
 class AppComponent extends React.Component {
 
+<<<<<<< HEAD
   /***********************
   **  STATE & VARIABLES **
   ***********************/
+=======
+  /* Set initial state */
+>>>>>>> 7bf4f22... Fixed empty column bug
   state = {
     symbols: Symbols,
     selected: []
   }
 
+<<<<<<< HEAD
   keyboardShortcuts = {
     down: () => this.selectNextItem(),
     up: () => this.test()
@@ -31,6 +36,11 @@ class AppComponent extends React.Component {
   renameItem() {
     return this.setState( () => API.renameItem(this.state) );
   }
+=======
+  /* Connectin API to helper functions */
+  getList         = (props) => ( API.getList(this.state, props) )
+  getColumns      = ()      => ( API.getColumns(this.state) )
+>>>>>>> 7bf4f22... Fixed empty column bug
 
   selectListItem(props) {
     return this.setState(props);
@@ -44,6 +54,10 @@ class AppComponent extends React.Component {
     return API.getItemByColumn(this.state, props);
   }
 
+  /* Local helper functions */
+  selectListItem(props) {
+    this.setState({selected: props.path});
+  }
 
   /****************************
   ** RENDER HELPER FUNCTIONS **
@@ -68,6 +82,7 @@ class AppComponent extends React.Component {
 
   renderColumn(columnIndex, key) {
     return (
+<<<<<<< HEAD
       <div key = {key} className = "columns-wrapper__column" >
         <ReactList
           itemRenderer = { (index, key) => this.renderListItem(index, key, columnIndex)}
@@ -77,13 +92,54 @@ class AppComponent extends React.Component {
           />
       </div>
     );
+=======
+      columns.map( (selectedIndex, columnIndex) => {
+        const listData = this.getList({selectedIndex: selectedIndex});
+        const selectedItem = selected[columnIndex]
+        return (
+          this.renderColumn({
+            list: listData,
+            columnIndex: columnIndex,
+            selectedItem: selectedItem
+          })
+        )
+      })
+    )
+>>>>>>> 7bf4f22... Fixed empty column bug
+  }
+
+  renderColumn(props){
+    const { selected } = this.state;
+    const { list, selectedItem, columnIndex } = props;
+
+    if(list){
+      return (
+        <div className='column' key={columnIndex}>
+          { list.map( (item, rowIndex) => {
+            const selected = (selectedItem === rowIndex)
+            return (
+              <ListItem
+                data={item}
+                key={rowIndex}
+                selected={selected}
+                onClick = {() => this.selectListItem({path: item.path })}
+              />
+            )
+          })}
+        </div>
+      );
+    }
   }
 
   render() {
+<<<<<<< HEAD
     const {
       selected
     } = this.state;
     const columns = selected.length + 1;
+=======
+
+>>>>>>> 7bf4f22... Fixed empty column bug
     return (
       <div>
         <button onClick = { () => this.renameItem()} > rename < /button>
@@ -100,6 +156,9 @@ class AppComponent extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 AppComponent.defaultProps = {};
 
+=======
+>>>>>>> 7bf4f22... Fixed empty column bug
 export default AppComponent;

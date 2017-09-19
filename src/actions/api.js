@@ -7,12 +7,23 @@ export const getList = (state, props) => {
   const { symbols, selected } = state;
   const { columnIndex } = props;
 
+<<<<<<< HEAD
   let symbolsPath = '';
   if ( columnIndex > 0) {
 
     for(var columns=0; columns < columnIndex && columns < selected.length; columns++ ){
       const id = selected[columns];
       symbolsPath += '[' + id + ']';
+=======
+
+  let path = '';
+
+  if(selectedIndex != null) {
+    selected.map( (v, index) => {
+
+      if(index <= selectedIndex && selectedIndex < selected.length ){
+        path += '[' + v + ']';
+>>>>>>> 7bf4f22... Fixed empty column bug
 
       const temp = resolvePath(symbols, symbolsPath);
       if (temp.children) {
@@ -23,7 +34,17 @@ export const getList = (state, props) => {
     const list = resolvePath(symbols, symbolsPath);
     return list;
   }
+<<<<<<< HEAD
   return symbols;
+=======
+
+  let list = resolvePath(symbols, path);
+  if(list.length === undefined){
+      // If last item in list is a symbol, we don;t show the last column
+      list = null
+  }
+  return list;
+>>>>>>> 7bf4f22... Fixed empty column bug
 }
 
 /**
