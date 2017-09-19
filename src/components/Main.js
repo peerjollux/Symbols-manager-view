@@ -2,10 +2,12 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
+import ReactDOM from 'react-dom'
 import Dragula from 'react-dragula'
 import Symbols from '../sources/Symbols'
 import ListItem from './ListItem'
 import * as API from '../actions/api'
+const resolvePath = require('object-resolve-path');
 
 class AppComponent extends React.Component {
 
@@ -14,6 +16,8 @@ class AppComponent extends React.Component {
     symbols: Symbols,
     selected: []
   }
+
+  focusedItem = null;
 
   /* Connectin API to helper functions */
   getList         = (props) => ( API.getList(this.state, props) )
@@ -24,6 +28,9 @@ class AppComponent extends React.Component {
     this.setState({selected: props.path});
   }
 
+  setFocusedItem(props){
+    this.focusedItem = props.path
+  }
   /* Render helper functions */
   renderColumns(){
     const columns = this.getColumns()
@@ -43,13 +50,46 @@ class AppComponent extends React.Component {
     )
   }
 
+  componentDidUpdate(){
+    let containers = [];
+    const columns = this.getColumns();
+
+    columns.map( (v, i) => {
+      const column = resolvePath(this.refs, 'column'+i)
+      containers.push(ReactDOM.findDOMNode(column));
+    })
+
+
+    let options = {
+      isContainer: function (el) {
+      },
+      accepts: function(el, target, source, sibling) {
+
+
+        if(target.className != 'column') {
+          return false
+        }
+
+        if(target == source) {
+          return false
+        }
+
+        console.log(this.focusedItem)
+        return true
+      },
+    };
+
+    const drake = Dragula(containers, options);
+
+  }
+
   renderColumn(props){
     const { selected } = this.state;
     const { list, selectedItem, columnIndex } = props;
 
     if(list){
       return (
-        <div className='column' key={columnIndex} ref={this.dragulaDecorator}>
+        <div className={'column'} ref={'column'+columnIndex} key={columnIndex} >
           { list.map( (item, rowIndex) => {
             const selected = (selectedItem === rowIndex)
             return (
@@ -57,7 +97,8 @@ class AppComponent extends React.Component {
                 data={item}
                 key={rowIndex}
                 selected={selected}
-                onClick = {() => this.selectListItem({path: item.path })}
+                onClick = { () => this.selectListItem({path: item.path }) }
+                onMouseDown = { () => this.setFocusedItem({path: item.path }) }
               />
             )
           })}
@@ -67,8 +108,12 @@ class AppComponent extends React.Component {
   }
 
   dragulaDecorator(componentBackingInstance){
+
     if (componentBackingInstance) {
-      let options = { };
+      let options = {
+        direction: 'horizontal'
+      };
+
       Dragula([componentBackingInstance], options);
     }
   };
