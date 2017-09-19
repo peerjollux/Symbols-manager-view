@@ -12,12 +12,12 @@ const Symbols = [
           {
             name: 'large',
             type: 'symbol',
-            path: [0, 0, 0],
+            path: [0, 0, 0]
           },
           {
             name: 'small',
             type: 'symbol',
-            path: [0, 0, 1],
+            path: [0, 0, 1]
           }
         ]
       },
@@ -29,7 +29,7 @@ const Symbols = [
           {
             name: 'default alert',
             type: 'symbol',
-            path: [0, 1, 0],
+            path: [0, 1, 0]
           }
         ]
       },
@@ -41,7 +41,7 @@ const Symbols = [
           {
             name: 'default',
             type: 'symbol',
-            path: [0, 2, 0],
+            path: [0, 2, 0]
           }
         ]
       }
@@ -55,7 +55,7 @@ const Symbols = [
       {
         name: 'default compopnet',
         type: 'symbol',
-        path: [1, 0],
+        path: [1, 0]
       }
     ]
   },
@@ -67,7 +67,7 @@ const Symbols = [
       {
         name: 'icon x',
         type: 'symbol',
-        path: [2, 0],
+        path: [2, 0]
       }
     ]
   }

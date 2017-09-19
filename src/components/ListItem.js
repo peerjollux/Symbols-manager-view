@@ -11,6 +11,7 @@ const ListItem = props => {
   if(type){
     classNames.push('listItem--'+type);
   }
+
   if(selected){
     classNames.push('listItem--selected');
   }

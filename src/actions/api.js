@@ -5,27 +5,35 @@ const resolvePath = require('object-resolve-path');
  */
 export const getList = (state, props) => {
   const { symbols, selected } = state;
-  const { columnIndex } = props;
+  const { selectedIndex } = props;
 
-  let symbolsPath = '';
-  if ( columnIndex > 0) {
+  let path = '';
 
-    for(var columns=0; columns < columnIndex && columns < selected.length; columns++ ){
-      const id = selected[columns];
-      symbolsPath += '[' + id + ']';
+  if(selectedIndex != null) {
+    selected.map( (v, index) => {
+      if(index <= selectedIndex){
+        path += '[' + index + ']';
 
-      const temp = resolvePath(symbols, symbolsPath);
-      if (temp.children) {
-        symbolsPath += '.children';
+        const tempList = resolvePath(symbols, path);
+        if(tempList.children){
+          path += '.children'
+        }
       }
-    }
-
-    const list = resolvePath(symbols, symbolsPath);
-    return list;
+    })
   }
-  return symbols;
+  const list = resolvePath(symbols, path);
+  return list;
 }
 
+
+export const getColumns = (state) => {
+  const { selected } = state;
+  let columns = [null]
+  selected.map( (v, i) => {
+    columns.push(i)
+  })
+  return columns;
+}
 /**
  * getItemByColumn() returns a item object.
  * Object can be found by proving a column- and row-index.
