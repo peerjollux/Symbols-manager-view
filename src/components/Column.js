@@ -3,7 +3,7 @@ import ListItem from './ListItem'
 
 const Column = props => {
 
-  const { list, selectedItem } = props;
+  const { list, selectedItem, onClickHandler } = props;
 
   return (
     <div className='column'>
@@ -11,7 +11,12 @@ const Column = props => {
         const selected = (selectedItem === rowIndex)
 
         return (
-          <ListItem data={item} key={rowIndex} selected={selected}/>
+          <ListItem
+            data={item}
+            key={rowIndex}
+            selected={selected}
+            onClick = {() => onClickHandler(item.path)}
+          />
         )
       })}
     </div>

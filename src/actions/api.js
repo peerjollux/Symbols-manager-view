@@ -7,12 +7,14 @@ export const getList = (state, props) => {
   const { symbols, selected } = state;
   const { selectedIndex } = props;
 
+
   let path = '';
 
   if(selectedIndex != null) {
     selected.map( (v, index) => {
-      if(index <= selectedIndex){
-        path += '[' + index + ']';
+
+      if(index <= selectedIndex && selectedIndex < selected.length ){
+        path += '[' + v + ']';
 
         const tempList = resolvePath(symbols, path);
         if(tempList.children){
@@ -21,7 +23,12 @@ export const getList = (state, props) => {
       }
     })
   }
-  const list = resolvePath(symbols, path);
+
+  let list = resolvePath(symbols, path);
+  if(list.length === undefined){
+      // If last item in list is a symbol, we don;t show the last column
+      list = null
+  }
   return list;
 }
 
