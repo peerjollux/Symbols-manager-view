@@ -5,64 +5,42 @@ const resolvePath = require('object-resolve-path');
  */
 export const getList = (state, props) => {
   const { symbols, selected } = state;
-  const { columnIndex } = props;
-
-<<<<<<< HEAD
-  let symbolsPath = '';
-  if ( columnIndex > 0) {
-
-    for(var columns=0; columns < columnIndex && columns < selected.length; columns++ ){
-      const id = selected[columns];
-      symbolsPath += '[' + id + ']';
-=======
+  const { selectedIndex } = props;
 
 
   let path = '';
 
   if(selectedIndex != null) {
     selected.map( (v, index) => {
-<<<<<<< HEAD
-=======
 
       if(index <= selectedIndex && selectedIndex < selected.length ){
         path += '[' + v + ']';
->>>>>>> 7bf4f22... Fixed empty column bug
 
-      if(index <= selectedIndex && selectedIndex < selected.length ){
-        path += '[' + v + ']';
->>>>>>> 7bf4f22... Fixed empty column bug
-
-      const temp = resolvePath(symbols, symbolsPath);
-      if (temp.children) {
-        symbolsPath += '.children';
+        const tempList = resolvePath(symbols, path);
+        if(tempList.children){
+          path += '.children'
+        }
       }
-    }
-
-    const list = resolvePath(symbols, symbolsPath);
-    return list;
+    })
   }
-<<<<<<< HEAD
-  return symbols;
-=======
 
   let list = resolvePath(symbols, path);
   if(list.length === undefined){
       // If last item in list is a symbol, we don;t show the last column
       list = null
   }
-<<<<<<< HEAD
-=======
-
-  let list = resolvePath(symbols, path);
-  if(list.length === undefined){
-      // If last item in list is a symbol, we don;t show the last column
-      list = null
-  }
->>>>>>> 7bf4f22... Fixed empty column bug
   return list;
->>>>>>> 7bf4f22... Fixed empty column bug
 }
 
+
+export const getColumns = (state) => {
+  const { selected } = state;
+  let columns = [null]
+  selected.map( (v, i) => {
+    columns.push(i)
+  })
+  return columns;
+}
 /**
  * getItemByColumn() returns a item object.
  * Object can be found by proving a column- and row-index.

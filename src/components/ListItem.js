@@ -2,7 +2,7 @@ import React from 'react'
 
 const ListItem = props => {
 
-  const { data, itemKey, selected, onClick } = props;
+  const { data, itemKey, selected, onClick, onMouseDown } = props;
   const { type, name } = data;
 
   // Setting the className
@@ -11,6 +11,7 @@ const ListItem = props => {
   if(type){
     classNames.push('listItem--'+type);
   }
+
   if(selected){
     classNames.push('listItem--selected');
   }
@@ -23,6 +24,7 @@ const ListItem = props => {
       key={itemKey}
       className={classNames}
       onClick = {onClick}
+      onMouseDown = {onMouseDown}
     >
       {name}
     </div>
