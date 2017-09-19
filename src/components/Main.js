@@ -2,12 +2,9 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-import ReactDOM from 'react-dom'
-import Dragula from 'react-dragula'
 import Symbols from '../sources/Symbols'
 import ListItem from './ListItem'
 import * as API from '../actions/api'
-const resolvePath = require('object-resolve-path');
 
 class AppComponent extends React.Component {
 
@@ -50,41 +47,7 @@ class AppComponent extends React.Component {
     )
   }
 
-  componentDidUpdate(){
-    let containers = [];
-    const columns = this.getColumns();
-
-    columns.map( (v, i) => {
-      const column = resolvePath(this.refs, 'column'+i)
-      containers.push(ReactDOM.findDOMNode(column));
-    })
-
-
-    let options = {
-      isContainer: function (el) {
-      },
-      accepts: function(el, target, source, sibling) {
-
-
-        if(target.className != 'column') {
-          return false
-        }
-
-        if(target == source) {
-          return false
-        }
-
-        console.log(this.focusedItem)
-        return true
-      },
-    };
-
-    const drake = Dragula(containers, options);
-
-  }
-
   renderColumn(props){
-    const { selected } = this.state;
     const { list, selectedItem, columnIndex } = props;
 
     if(list){
@@ -106,17 +69,6 @@ class AppComponent extends React.Component {
       );
     }
   }
-
-  dragulaDecorator(componentBackingInstance){
-
-    if (componentBackingInstance) {
-      let options = {
-        direction: 'horizontal'
-      };
-
-      Dragula([componentBackingInstance], options);
-    }
-  };
 
   render() {
     return (
