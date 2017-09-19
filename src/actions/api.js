@@ -16,10 +16,17 @@ export const getList = (state, props) => {
       symbolsPath += '[' + id + ']';
 =======
 
+
   let path = '';
 
   if(selectedIndex != null) {
     selected.map( (v, index) => {
+<<<<<<< HEAD
+=======
+
+      if(index <= selectedIndex && selectedIndex < selected.length ){
+        path += '[' + v + ']';
+>>>>>>> 7bf4f22... Fixed empty column bug
 
       if(index <= selectedIndex && selectedIndex < selected.length ){
         path += '[' + v + ']';
@@ -43,6 +50,15 @@ export const getList = (state, props) => {
       // If last item in list is a symbol, we don;t show the last column
       list = null
   }
+<<<<<<< HEAD
+=======
+
+  let list = resolvePath(symbols, path);
+  if(list.length === undefined){
+      // If last item in list is a symbol, we don;t show the last column
+      list = null
+  }
+>>>>>>> 7bf4f22... Fixed empty column bug
   return list;
 >>>>>>> 7bf4f22... Fixed empty column bug
 }
