@@ -14,10 +14,11 @@ class AppComponent extends React.Component {
   /* Set initial state */
   state = {
     symbols: Symbols,
-    selected: []
+    selected: [],
+    focusedItem: null
   }
 
-  focusedItem = null;
+
 
   /* Connectin API to helper functions */
   getList         = (props) => ( API.getList(this.state, props) )
@@ -29,7 +30,7 @@ class AppComponent extends React.Component {
   }
 
   setFocusedItem(props){
-    this.focusedItem = props.path
+    this.setState({focusedItem: props.path});
   }
   /* Render helper functions */
   renderColumns(){
@@ -51,18 +52,26 @@ class AppComponent extends React.Component {
   }
 
   renderColumn(props){
+    const { focusedItem } = this.state;
     const { list, selectedItem, columnIndex } = props;
 
     if(list){
+
       return (
-        <Column className={'column'} ref={'column'+columnIndex} columnIndex={columnIndex} key={columnIndex} >
+        <Column
+          className = {'column'}
+          ref = {'column'+columnIndex}
+          columnIndex = {columnIndex}
+          key = {columnIndex}
+          focusedItem = {focusedItem}
+          >
           { list.map( (item, rowIndex) => {
             const selected = (selectedItem === rowIndex)
             return (
               <ListItem
-                data={item}
-                key={rowIndex}
-                selected={selected}
+                data = {item}
+                key = {rowIndex}
+                selected = {selected}
                 onClick = { () => this.selectListItem({path: item.path }) }
                 onMouseDown = { () => this.setFocusedItem({path: item.path }) }
               />

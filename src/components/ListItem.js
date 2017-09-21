@@ -6,6 +6,7 @@ const listItemSource = {
   beginDrag: function(){
     return {};
   }
+  
 }
 
 function collect(connect, monitor) {

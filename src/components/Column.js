@@ -4,11 +4,16 @@ import ItemTypes from '../contstants/ItemTypes'
 
 
 const listItemTarget = {
-  canDrop(props, monitor, component) {
-   console.log(props.columnIndex)
+  canDrop(props, monitor) {
+  const { focusedItem, columnIndex } = props;
+  const targetColumn = columnIndex;
+  const itemColumn = focusedItem.length - 1;
+
+  return ( targetColumn <= itemColumn )
  },
   drop(props, monitor, component) {
-
+    console.log(props)
+    return props
   }
 };
 
@@ -23,19 +28,20 @@ function collect(connect, monitor) {
 class Column extends Component {
 
   render(){
-    const { className, children, connectDropTarget, isOver } = this.props;
+    const { className, children, connectDropTarget, isOver, canDrop } = this.props;
 
-    let backgroundColor = '#FFF'
-    if(isOver){
-      backgroundColor = '#F5F9FF'
+    let style = {
+      backgroundColor: '#FFF'
+    }
+
+    if(isOver && canDrop){
+      style.backgroundColor = '#F5F9FF'
     }
 
     return connectDropTarget(
       <div
-        className={className}
-        style={{
-          backgroundColor
-        }}
+        className = {className}
+        style = {style}
       >
         {children}
       </div>
