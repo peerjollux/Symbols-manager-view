@@ -27,6 +27,7 @@ class AppComponent extends React.Component {
 
 
   renderColumns(){
+    const { lastClicked, selected } = this.props
     const columns = this.getColumns()
 
     return (
@@ -34,7 +35,7 @@ class AppComponent extends React.Component {
         const list = this.getList(selectedIndex);
         if(list){
           return (
-            <Column list={list} className={'column'} ref={'column'+columnIndex} columnIndex={columnIndex} key={columnIndex} />
+            <Column list={list} state={{lastClicked, selected}} className={'column'} ref={'column'+columnIndex} columnIndex={columnIndex} key={columnIndex} />
           )
         }
       })

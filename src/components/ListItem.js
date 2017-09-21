@@ -60,5 +60,4 @@ class ListItem extends Component {
   }
 }
 
-
 export default DragSource(ItemTypes.LISTITEM, listItemSource, collect)(ListItem);
