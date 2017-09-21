@@ -3,10 +3,7 @@ const resolvePath = require('object-resolve-path');
 /**
  * getList() returns a array of a item objects.
  */
-export const getList = (state, props) => {
-  const { symbols, selected } = state;
-  const { selectedIndex } = props;
-
+export const getList = (symbols, selected, selectedIndex) => {
 
   let path = '';
 
@@ -114,9 +111,7 @@ export const renameItem = (state) => {
   }
 }
 
-export const isSelected = (state, props) => {
-  const { selected } = state;
-  const { rowIndex, columnIndex } = props;
+export const isSelected = (selected, rowIndex, columnIndex) => {
 
   if (rowIndex == selected[columnIndex]) {
     return true;

@@ -31,7 +31,6 @@ class ListItem extends Component {
     } = this.props;
     const { type, name } = data;
 
-
     // Setting the className
     let classNames = ['listItem']
 
@@ -50,6 +49,7 @@ class ListItem extends Component {
         className={classNames}
         onClick = {onClick}
         onMouseDown = {onMouseDown}
+
         style={{
           opacity: isDragging ? 0.9 : 1,
         }}
