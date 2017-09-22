@@ -37,7 +37,7 @@ function checkIfChild(array, target, targetColumn){
 }
 
 const listItemTarget = {
-  canDrop(props, monitor) {
+  canDrop(props) {
     let { columnIndex } = props
     let { lastClicked, selected } = props.state
     let target = selected;
@@ -59,7 +59,7 @@ const listItemTarget = {
     return true
   },
   drop(props, monitor, component) {
-
+    console.log(props, monitor, component)
   }
 }
 

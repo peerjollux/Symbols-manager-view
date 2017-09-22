@@ -51,7 +51,7 @@ class ListItem extends Component {
         onMouseDown = {onMouseDown}
 
         style={{
-          opacity: isDragging ? 0.9 : 1,
+          opacity: isDragging ? 0.9 : 1
         }}
       >
         {name}
