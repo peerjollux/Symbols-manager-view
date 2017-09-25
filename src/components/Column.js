@@ -36,6 +36,9 @@ function checkIfChild(array, target, targetColumn){
   return true
 }
 
+
+
+
 const listItemTarget = {
   canDrop(props) {
     let { columnIndex } = props
@@ -59,7 +62,8 @@ const listItemTarget = {
     return true
   },
   drop(props, monitor, component) {
-    console.log(props, monitor, component)
+    const { onDrop, columnIndex } = props;
+    onDrop(columnIndex);
   }
 }
 
@@ -133,6 +137,7 @@ const mapStateToProps = state => {
     selected: state.SelectionReducer.selected
   }
 };
+
 
 const ColumnWithData = connect(mapStateToProps, { selectItem, clickItem })(Column)
 export default DropTarget(ItemTypes.LISTITEM, listItemTarget, collect)(ColumnWithData);

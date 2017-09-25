@@ -1,6 +1,6 @@
 import Symbols from '../sources/Symbols'
 import {
-  ITEM_SELECT
+  DROP_ITEM
 } from '../contstants/actionTypes';
 
 
@@ -10,8 +10,9 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ITEM_SELECT:
-      return action.payload;
+    case DROP_ITEM:
+      console.log(state)
+      return { ...state, symbols: action.payload };
     default:
       return state;
   }

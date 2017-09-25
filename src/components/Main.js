@@ -6,10 +6,20 @@ import Column from './Column'
 import * as API from '../actions/api'
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import {
+  dropItem
+} from '../actions';
 import { connect } from 'react-redux';
 
 
 class AppComponent extends React.Component {
+  componentWillUpdate(){
+    console.log(this.props)
+  }
+
+  organizeSymbolsList(symbols){
+
+  }
 
   getList(selectedIndex){
     const { symbols, selected } = this.props
@@ -25,6 +35,11 @@ class AppComponent extends React.Component {
     return columns;
   }
 
+  onDrop(columnIndex){
+    let { symbols, selected, lastClicked } = this.props
+    let payload = API.moveItem(symbols, selected, lastClicked, columnIndex);
+    return this.props.dropItem(payload)
+  }
 
   renderColumns(){
     const { lastClicked, selected } = this.props
@@ -35,7 +50,15 @@ class AppComponent extends React.Component {
         const list = this.getList(selectedIndex);
         if(list){
           return (
-            <Column list={list} state={{lastClicked, selected}} className={'column'} ref={'column'+columnIndex} columnIndex={columnIndex} key={columnIndex} />
+            <Column
+              list={list}
+              onDrop={ () => this.onDrop()}
+              state={{lastClicked, selected}}
+              className={'column'}
+              ref={'column'+columnIndex}
+              columnIndex={columnIndex}
+              key={columnIndex}
+              />
           )
         }
       })
@@ -59,5 +82,5 @@ const mapStateToProps = state => {
   }
 }
 
-const AppComponentWithData = connect(mapStateToProps, {})(AppComponent)
+const AppComponentWithData = connect(mapStateToProps, {dropItem})(AppComponent)
 export default DragDropContext(HTML5Backend)(AppComponentWithData)

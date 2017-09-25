@@ -1,5 +1,46 @@
 const resolvePath = require('object-resolve-path');
 
+const getParentPath = (pathArray) => {
+  let symbolsPath = '';
+  const pathLength = pathArray.length;
+
+  if (pathLength != 0) {
+    let count = 0;
+
+    for (var id of pathArray) {
+      count++
+
+      if (count < pathLength) {
+        symbolsPath += '[' + id + ']';
+        symbolsPath += ['.children']
+      }
+    }
+  }
+  return symbolsPath
+}
+
+export const moveItem = (symbols, selected, itemPath, targetColumn) => {
+  const symbolsCopy = Object.assign([], symbols);
+  const symbolsPath = getParentPath(itemPath)
+
+  const parentPath = resolvePath(symbolsCopy, symbolsPath)
+  const lastIndex = itemPath[itemPath.length - 1]
+
+  // Get item to move
+  const item = parentPath.slice(lastIndex, 1)
+
+  // Remove item from symbols list
+  parentPath.splice(lastIndex, 1)
+
+  //Define target path
+  let targetPath = selected.slice(0, targetColumn - 1)
+  targetPath = getParentPath(targetPath)
+  targetPath = resolvePath(symbolsCopy, targetPath)
+  targetPath.push(item[0])
+
+  return symbolsCopy
+}
+
 /**
  * getList() returns a array of a item objects.
  */
