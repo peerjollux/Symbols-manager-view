@@ -59,17 +59,12 @@ class Column extends Component {
     return this.props.clickItem(props)
   }
 
-  isSelected(rowIndex, columnIndex){
-    const { selected } = this.props
-    return API.isSelected(selected, rowIndex, columnIndex)
-  }
-
   renderListItems(){
     const { list, columnIndex } = this.props
     return (
       list.map((item, rowIndex) => {
 
-        const isSelected = this.isSelected(rowIndex, columnIndex);
+        const isSelected = API.isSelected(columnIndex, rowIndex);
         const itemPath = API.getItemPath(columnIndex, rowIndex);
         return (
           <ListItem
@@ -77,6 +72,7 @@ class Column extends Component {
             key = {rowIndex}
             columnIndex = {columnIndex}
             selected = {isSelected}
+            itemPath = {itemPath}
             onClick = { () => this.selectListItem(itemPath)}
             onMouseDown = { () => this.setFocusedItem(itemPath)}
           />

@@ -155,7 +155,9 @@ export const renameItem = (state) => {
   }
 }
 
-export const isSelected = (selected, rowIndex, columnIndex) => {
+export const isSelected = (columnIndex, rowIndex) => {
+  let state = store.getState()
+  let { selected } = state.SelectionReducer;
 
   if (rowIndex == selected[columnIndex]) {
     return true;
@@ -207,7 +209,7 @@ export const getItemPath = (columnIndex, rowIndex) => {
   }
 
   itemPath.push(rowIndex);
-  
+
   return itemPath
 }
 
