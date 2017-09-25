@@ -13,14 +13,6 @@ import { connect } from 'react-redux';
 
 
 class AppComponent extends React.Component {
-  componentWillUpdate(){
-    console.log(this.props)
-  }
-
-  organizeSymbolsList(symbols){
-
-  }
-
   getList(selectedIndex){
     const { symbols, selected } = this.props
     return API.getList(symbols, selected, selectedIndex)

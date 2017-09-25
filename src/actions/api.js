@@ -1,4 +1,7 @@
 const resolvePath = require('object-resolve-path');
+import store from '../stores'
+
+
 
 const getParentPath = (pathArray) => {
   let symbolsPath = '';
@@ -190,4 +193,45 @@ export const saveItem = (state, props) => {
 
     return state;
   }
+}
+
+
+export const getItemPath = (columnIndex, rowIndex) => {
+  let state = store.getState()
+  let { selected } = state.SelectionReducer;
+
+  let itemPath = []
+
+  if(columnIndex > 0){
+    itemPath = selected.slice(0, columnIndex)
+  }
+
+  itemPath.push(rowIndex);
+  
+  return itemPath
+}
+
+
+export const checkIfChild = (array, target, targetColumn) => {
+	let	newTarget = _.first(target, targetColumn)
+  let newArray = _.first(array, targetColumn)
+
+  if(array.length > target.length){
+    return false
+  }
+
+  if(newArray.length < newTarget.length){
+    newTarget = _.first(target, newArray.length)
+  }
+
+  if(newArray.length !== newTarget.length){
+    return false
+  }
+
+	for(var i = newArray.length; i--;) {
+    if(newArray[i] !== newTarget[i]){
+      return false;
+    }
+  }
+  return true
 }

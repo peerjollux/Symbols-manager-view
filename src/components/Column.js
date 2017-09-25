@@ -11,31 +11,6 @@ import {
 } from '../actions';
 
 
-function checkIfChild(array, target, targetColumn){
-
-	let	newTarget = _.first(target, targetColumn)
-  let newArray = _.first(array, targetColumn)
-
-  if(array.length > target.length){
-    return false
-  }
-
-  if(newArray.length < newTarget.length){
-    newTarget = _.first(target, newArray.length)
-  }
-
-  if(newArray.length !== newTarget.length){
-    return false
-  }
-
-	for(var i = newArray.length; i--;) {
-    if(newArray[i] !== newTarget[i]){
-      return false;
-    }
-  }
-  return true
-}
-
 
 
 
@@ -51,7 +26,7 @@ const listItemTarget = {
     if(targetColumn < itemColumn){
       return true
     }
-    if(checkIfChild(item, target, targetColumn)){
+    if(API.checkIfChild(item, target, targetColumn)){
       return false
     }
     // Item can't be droppen in the column
@@ -95,14 +70,15 @@ class Column extends Component {
       list.map((item, rowIndex) => {
 
         const isSelected = this.isSelected(rowIndex, columnIndex);
-
+        const itemPath = API.getItemPath(columnIndex, rowIndex);
         return (
           <ListItem
             data = {item}
             key = {rowIndex}
+            columnIndex = {columnIndex}
             selected = {isSelected}
-            onClick = { () => this.selectListItem(item.path )}
-            onMouseDown = { () => this.setFocusedItem(item.path)}
+            onClick = { () => this.selectListItem(itemPath)}
+            onMouseDown = { () => this.setFocusedItem(itemPath)}
           />
         )
       })
