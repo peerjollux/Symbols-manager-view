@@ -13,13 +13,32 @@ const getParentPathString = (pathArray) => {
 
     for (var id of pathArray) {
       count++
-
       if (count < pathLength) {
         symbolsPath += '[' + id + ']';
         symbolsPath += ['.children']
       }
     }
   }
+
+  return symbolsPath
+}
+
+const getPathString = (pathArray) => {
+  let symbolsPath = '';
+  const pathLength = pathArray.length;
+
+  if (pathLength != 0) {
+    let count = 0;
+
+    for (var id of pathArray) {
+      count++
+      if (count <= pathLength) {
+        symbolsPath += '[' + id + ']';
+        symbolsPath += ['.children']
+      }
+    }
+  }
+
   return symbolsPath
 }
 
@@ -34,7 +53,7 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
 
   // Get item to move
   const item = parentPath[lastIndex]
-  console.log(item)
+
 
   // Remove item from symbols list
   parentPath.splice(lastIndex, 1)
@@ -42,10 +61,9 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
   //Define target path
   let targetPath = selected.slice(0, targetColumn)
 
-  targetPath = getParentPathString(targetPath)
-
-
+  targetPath = getPathString(targetPath)
   targetPath = resolvePath(symbolsCopy, targetPath)
+
   targetPath.push(item)
 
   return symbolsCopy
