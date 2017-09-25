@@ -13,11 +13,6 @@ import { connect } from 'react-redux';
 
 
 class AppComponent extends React.Component {
-  getList(selectedIndex){
-    const { symbols, selected } = this.props
-    return API.getList(symbols, selected, selectedIndex)
-  }
-
   getColumns(){
     const { selected } = this.props
     let columns = [null]
@@ -29,7 +24,9 @@ class AppComponent extends React.Component {
 
   onDrop(columnIndex){
     let { symbols, selected, lastClicked } = this.props
+
     let payload = API.moveItem(symbols, selected, lastClicked, columnIndex);
+
     return this.props.dropItem(payload)
   }
 
@@ -39,12 +36,13 @@ class AppComponent extends React.Component {
 
     return (
       columns.map((selectedIndex, columnIndex) => {
-        const list = this.getList(selectedIndex);
+        const list = API.getList(selectedIndex);
+
         if(list){
           return (
             <Column
               list={list}
-              onDrop={ () => this.onDrop()}
+              onDrop={ () => this.onDrop(columnIndex)}
               state={{lastClicked, selected}}
               className={'column'}
               ref={'column'+columnIndex}

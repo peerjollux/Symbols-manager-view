@@ -1,9 +1,10 @@
 const resolvePath = require('object-resolve-path');
 import store from '../stores'
+import _ from 'underscore'
 
 
 
-const getParentPath = (pathArray) => {
+const getParentPathString = (pathArray) => {
   let symbolsPath = '';
   const pathLength = pathArray.length;
 
@@ -22,24 +23,30 @@ const getParentPath = (pathArray) => {
   return symbolsPath
 }
 
+
 export const moveItem = (symbols, selected, itemPath, targetColumn) => {
   const symbolsCopy = Object.assign([], symbols);
-  const symbolsPath = getParentPath(itemPath)
+  const symbolsPath = getParentPathString(itemPath)
 
   const parentPath = resolvePath(symbolsCopy, symbolsPath)
   const lastIndex = itemPath[itemPath.length - 1]
+  const lastSelectedIndex = selected[selected.length - 1]
 
   // Get item to move
-  const item = parentPath.slice(lastIndex, 1)
+  const item = parentPath[lastIndex]
+  console.log(item)
 
   // Remove item from symbols list
   parentPath.splice(lastIndex, 1)
 
   //Define target path
-  let targetPath = selected.slice(0, targetColumn - 1)
-  targetPath = getParentPath(targetPath)
+  let targetPath = selected.slice(0, targetColumn)
+
+  targetPath = getParentPathString(targetPath)
+
+
   targetPath = resolvePath(symbolsCopy, targetPath)
-  targetPath.push(item[0])
+  targetPath.push(item)
 
   return symbolsCopy
 }
@@ -47,7 +54,11 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
 /**
  * getList() returns a array of a item objects.
  */
-export const getList = (symbols, selected, selectedIndex) => {
+export const getList = (selectedIndex) => {
+
+  const state = store.getState()
+  const { symbols } = state.SymbolsReducer;
+  const { selected } = state.SelectionReducer;
 
   let path = '';
 
@@ -57,8 +68,10 @@ export const getList = (symbols, selected, selectedIndex) => {
       if(index <= selectedIndex && selectedIndex < selected.length ){
         path += '[' + v + ']';
 
+
         const tempList = resolvePath(symbols, path);
-        if(tempList.children){
+
+        if(tempList.hasOwnProperty('children')){
           path += '.children'
         }
       }
@@ -70,6 +83,7 @@ export const getList = (symbols, selected, selectedIndex) => {
       // If last item in list is a symbol, we don;t show the last column
       list = null
   }
+
   return list;
 }
 

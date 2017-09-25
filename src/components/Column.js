@@ -3,16 +3,11 @@ import { DropTarget } from 'react-dnd'
 import ItemTypes from '../contstants/ItemTypes'
 import { connect } from 'react-redux'
 import ListItem from './ListItem'
-import _ from 'underscore'
 import * as API from '../actions/api'
 import {
   selectItem,
   clickItem
 } from '../actions';
-
-
-
-
 
 const listItemTarget = {
   canDrop(props) {
@@ -61,11 +56,13 @@ class Column extends Component {
 
   renderListItems(){
     const { list, columnIndex } = this.props
+
     return (
       list.map((item, rowIndex) => {
 
         const isSelected = API.isSelected(columnIndex, rowIndex);
         const itemPath = API.getItemPath(columnIndex, rowIndex);
+
         return (
           <ListItem
             data = {item}
@@ -82,6 +79,7 @@ class Column extends Component {
   }
 
   render(){
+    
     const {
       className,
       connectDropTarget,

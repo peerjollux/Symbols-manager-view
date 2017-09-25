@@ -11,7 +11,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case DROP_ITEM:
-      console.log(state)
       return { ...state, symbols: action.payload };
     default:
       return state;
