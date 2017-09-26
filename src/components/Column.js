@@ -1,21 +1,41 @@
 import React, { Component } from 'react'
-import { DropTarget } from 'react-dnd';
+import { DropTarget } from 'react-dnd'
 import ItemTypes from '../contstants/ItemTypes'
-
+import { connect } from 'react-redux'
+import ListItem from './ListItem'
+import * as API from '../actions/api'
+import {
+  selectItem,
+  clickItem
+} from '../actions';
 
 const listItemTarget = {
-  canDrop(props, monitor) {
-  const { focusedItem, columnIndex } = props;
-  const targetColumn = columnIndex;
-  const itemColumn = focusedItem.length - 1;
+  canDrop(props) {
+    let { columnIndex } = props
+    let { lastClicked, selected } = props.state
+    let target = selected;
+    let targetColumn = columnIndex;
+    let item = lastClicked;
+    let itemColumn = item.length - 1;
 
-  return ( targetColumn <= itemColumn )
- },
+    if(targetColumn < itemColumn){
+      return true
+    }
+    if(API.checkIfChild(item, target, targetColumn)){
+      return false
+    }
+    // Item can't be droppen in the column
+    if(targetColumn == itemColumn){
+      return false
+    }
+
+    return true
+  },
   drop(props, monitor, component) {
-    console.log(props)
-    return props
+    const { onDrop, columnIndex } = props;
+    onDrop(columnIndex);
   }
-};
+}
 
 function collect(connect, monitor) {
   return {
@@ -26,27 +46,68 @@ function collect(connect, monitor) {
 }
 
 class Column extends Component {
+  selectListItem(props) {
+    return this.props.selectItem(props)
+  }
+
+  setFocusedItem(props){
+    return this.props.clickItem(props)
+  }
+
+  renderListItems(){
+    const { list, columnIndex } = this.props
+
+    return (
+      list.map((item, rowIndex) => {
+
+        const isSelected = API.isSelected(columnIndex, rowIndex);
+        const itemPath = API.getItemPath(columnIndex, rowIndex);
+
+        return (
+          <ListItem
+            data = {item}
+            key = {rowIndex}
+            columnIndex = {columnIndex}
+            selected = {isSelected}
+            itemPath = {itemPath}
+            onClick = { () => this.selectListItem(itemPath)}
+            onMouseDown = { () => this.setFocusedItem(itemPath)}
+          />
+        )
+      })
+    )
+  }
 
   render(){
-    const { className, children, connectDropTarget, isOver, canDrop } = this.props;
 
-    let style = {
-      backgroundColor: '#FFF'
-    }
+    const {
+      className,
+      connectDropTarget,
+      isOver,
+      canDrop
+    } = this.props;
 
+    // Change background color on drag 'n drop hover
+    let backgroundColor = '#FFF'
     if(isOver && canDrop){
-      style.backgroundColor = '#F5F9FF'
+      backgroundColor = '#F5F9FF'
     }
 
     return connectDropTarget(
-      <div
-        className = {className}
-        style = {style}
-      >
-        {children}
+      <div className={className} style={{ backgroundColor }}>
+        { this.renderListItems() }
       </div>
     );
   }
 }
 
-export default DropTarget(ItemTypes.LISTITEM, listItemTarget, collect)(Column);
+const mapStateToProps = state => {
+  return {
+    symbols: state.SymbolsReducer.symbols,
+    selected: state.SelectionReducer.selected
+  }
+};
+
+
+const ColumnWithData = connect(mapStateToProps, { selectItem, clickItem })(Column)
+export default DropTarget(ItemTypes.LISTITEM, listItemTarget, collect)(ColumnWithData);

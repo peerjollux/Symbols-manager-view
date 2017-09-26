@@ -40,8 +40,21 @@ body {
   height: 36px;
   line-height: 36px;
   padding: 0 20px;
+  padding-left: 40px;
   margin-right: -1px;
   border-right: 1px solid transparant;
+  position: relative;
+}
+
+.listItem:before {
+  content: '';
+  background-image: url('../images/icon-symbol.png');
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  left: 16px;
+  top: 10px;
+  position: absolute;
 }
 
 .listItem--folder {
@@ -54,7 +67,35 @@ body {
   background-image: url('../images/arrow-right-white.png');
 }
 
+.listItem--folder::before{
+  background-image: url('../images/icon-folder.png');
+}
 
+
+@media all and (-webkit-min-device-pixel-ratio : 1.5),
+ all and (-o-min-device-pixel-ratio: 3/2),
+ all and (min--moz-device-pixel-ratio: 1.5),
+ all and (min-device-pixel-ratio: 1.5) {
+
+   .listItem:before {
+     background-image: url('../images/icon-symbol@2x.png');
+     background-size: 16px;
+   }
+
+   .listItem--folder {
+     background-image: url('../images/arrow-right-grey@2x.png');
+     background-size: 5px 8px;
+   }
+
+   .listItem--folder.listItem--selected{
+     background-image: url('../images/arrow-right-white@2x.png');
+   }
+
+   .listItem--folder::before{
+     background-image: url('../images/icon-folder@2x.png');
+     background-size: 16px;
+   }
+}
 
 .listItem--selected {
   background-color: #5098FB;

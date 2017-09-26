@@ -1,12 +1,89 @@
 const resolvePath = require('object-resolve-path');
+import store from '../stores'
+import _ from 'underscore'
+
+
+const getParentPathString = (pathArray) => {
+  let symbolsPath = '';
+  const pathLength = pathArray.length;
+
+  if (pathLength != 0) {
+    let count = 0;
+
+    for (var id of pathArray) {
+      count++
+      if (count < pathLength) {
+        symbolsPath += '[' + id + ']';
+        symbolsPath += ['.children']
+      }
+    }
+  }
+
+  return symbolsPath
+}
+
+const getPathString = (pathArray) => {
+  let symbolsPath = '';
+  const pathLength = pathArray.length;
+
+  if (pathLength != 0) {
+    let count = 0;
+
+    for (var id of pathArray) {
+      count++
+      if (count <= pathLength) {
+        symbolsPath += '[' + id + ']';
+        symbolsPath += ['.children']
+      }
+    }
+  }
+
+  return symbolsPath
+}
+
+
+export const moveItem = (symbols, selected, itemPath, targetColumn) => {
+  let symbolsCopy = Object.assign([], symbols);
+  const symbolsPath = getParentPathString(itemPath)
+
+  const parentPath = resolvePath(symbolsCopy, symbolsPath)
+  const lastIndex = itemPath[itemPath.length - 1]
+  const lastSelectedIndex = selected[selected.length - 1]
+
+  // Get item to move
+  const item = parentPath[lastIndex]
+  // Remove item from symbols list
+  parentPath.splice(lastIndex, 1)
+
+  //Define target path
+  let targetPath = selected.slice(0, targetColumn)
+
+  targetPath = getPathString(targetPath)
+  targetPath = resolvePath(symbolsCopy, targetPath)
+
+  // Add new item to array
+  targetPath.push(item)
+
+  // Create sorted copy of target column
+  let sortedTarget = _.sortBy(targetPath, 'name')
+  sortedTarget = _.sortBy(sortedTarget, 'type')
+
+  // For some reason we can not directly do targetPath=sortedTarget
+  // That's why we first empty the array and than push new sortedarray into it
+  targetPath.length = 0
+  targetPath.push(...sortedTarget)
+
+  return symbolsCopy
+}
 
 /**
  * getList() returns a array of a item objects.
  */
-export const getList = (state, props) => {
-  const { symbols, selected } = state;
-  const { selectedIndex } = props;
+export const getList = (selectedIndex) => {
 
+  const state = store.getState()
+  const { symbols } = state.SymbolsReducer;
+  const { selected } = state.SelectionReducer;
 
   let path = '';
 
@@ -16,19 +93,24 @@ export const getList = (state, props) => {
       if(index <= selectedIndex && selectedIndex < selected.length ){
         path += '[' + v + ']';
 
+
         const tempList = resolvePath(symbols, path);
-        if(tempList.children){
-          path += '.children'
+        if(tempList){
+          if(tempList.hasOwnProperty('children')){
+            path += '.children'
+          }
         }
       }
     })
   }
 
   let list = resolvePath(symbols, path);
-  if(list.length === undefined){
-      // If last item in list is a symbol, we don;t show the last column
-      list = null
+
+  // If last item in list is a symbol, we return an empty list
+  if(list === undefined || list.length === undefined){
+    list = null
   }
+
   return list;
 }
 
@@ -114,9 +196,9 @@ export const renameItem = (state) => {
   }
 }
 
-export const isSelected = (state, props) => {
-  const { selected } = state;
-  const { rowIndex, columnIndex } = props;
+export const isSelected = (columnIndex, rowIndex) => {
+  let state = store.getState()
+  let { selected } = state.SelectionReducer;
 
   if (rowIndex == selected[columnIndex]) {
     return true;
@@ -154,4 +236,45 @@ export const saveItem = (state, props) => {
 
     return state;
   }
+}
+
+
+export const getItemPath = (columnIndex, rowIndex) => {
+  let state = store.getState()
+  let { selected } = state.SelectionReducer;
+
+  let itemPath = []
+
+  if(columnIndex > 0){
+    itemPath = selected.slice(0, columnIndex)
+  }
+
+  itemPath.push(rowIndex);
+
+  return itemPath
+}
+
+
+export const checkIfChild = (array, target, targetColumn) => {
+	let	newTarget = _.first(target, targetColumn)
+  let newArray = _.first(array, targetColumn)
+
+  if(array.length > target.length){
+    return false
+  }
+
+  if(newArray.length < newTarget.length){
+    newTarget = _.first(target, newArray.length)
+  }
+
+  if(newArray.length !== newTarget.length){
+    return false
+  }
+
+	for(var i = newArray.length; i--;) {
+    if(newArray[i] !== newTarget[i]){
+      return false;
+    }
+  }
+  return true
 }

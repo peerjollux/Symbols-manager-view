@@ -2,84 +2,56 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-import Symbols from '../sources/Symbols'
-import ListItem from './ListItem'
 import Column from './Column'
 import * as API from '../actions/api'
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import {
+  dropItem
+} from '../actions';
+import { connect } from 'react-redux';
+
 
 class AppComponent extends React.Component {
-
-  /* Set initial state */
-  state = {
-    symbols: Symbols,
-    selected: [],
-    focusedItem: null
+  getColumns(){
+    const { selected } = this.props
+    let columns = [null]
+    selected.map( (v, i) => {
+      columns.push(i)
+    })
+    return columns;
   }
 
+  onDrop(columnIndex){
+    let { symbols, selected, lastClicked } = this.props
+    let payload = API.moveItem(symbols, selected, lastClicked, columnIndex);
 
-
-  /* Connectin API to helper functions */
-  getList         = (props) => ( API.getList(this.state, props) )
-  getColumns      = ()      => ( API.getColumns(this.state) )
-
-
-  selectListItem(props) {
-    this.setState({selected: props.path});
+    return this.props.dropItem(payload)
   }
 
-  setFocusedItem(props){
-    this.setState({focusedItem: props.path});
-  }
-  /* Render helper functions */
   renderColumns(){
+    const { lastClicked, selected } = this.props
     const columns = this.getColumns()
-    const { selected } = this.state;
+
     return (
-      columns.map( (selectedIndex, columnIndex) => {
-        const listData = this.getList({selectedIndex: selectedIndex});
-        const selectedItem = selected[columnIndex]
-        return (
-          this.renderColumn({
-            list: listData,
-            columnIndex: columnIndex,
-            selectedItem: selectedItem
-          })
-        )
+      columns.map((selectedIndex, columnIndex) => {
+        const list = API.getList(selectedIndex);
+
+        if(list){
+          return (
+            <Column
+              list={list}
+              onDrop={ () => this.onDrop(columnIndex)}
+              state={{lastClicked, selected}}
+              className={'column'}
+              ref={'column'+columnIndex}
+              columnIndex={columnIndex}
+              key={columnIndex}
+              />
+          )
+        }
       })
     )
-  }
-
-  renderColumn(props){
-    const { focusedItem } = this.state;
-    const { list, selectedItem, columnIndex } = props;
-
-    if(list){
-
-      return (
-        <Column
-          className = {'column'}
-          ref = {'column'+columnIndex}
-          columnIndex = {columnIndex}
-          key = {columnIndex}
-          focusedItem = {focusedItem}
-          >
-          { list.map( (item, rowIndex) => {
-            const selected = (selectedItem === rowIndex)
-            return (
-              <ListItem
-                data = {item}
-                key = {rowIndex}
-                selected = {selected}
-                onClick = { () => this.selectListItem({path: item.path }) }
-                onMouseDown = { () => this.setFocusedItem({path: item.path }) }
-              />
-            )
-          })}
-        </Column>
-      );
-    }
   }
 
   render() {
@@ -87,8 +59,17 @@ class AppComponent extends React.Component {
       <div className='columns-wrapper'>
         { this.renderColumns() }
       </div>
-    );
+    )
   }
 }
 
-export default DragDropContext(HTML5Backend)(AppComponent)
+const mapStateToProps = state => {
+  return {
+    symbols: state.SymbolsReducer.symbols,
+    selected: state.SelectionReducer.selected,
+    lastClicked: state.SelectionReducer.lastClicked
+  }
+}
+
+const AppComponentWithData = connect(mapStateToProps, {dropItem})(AppComponent)
+export default DragDropContext(HTML5Backend)(AppComponentWithData)
