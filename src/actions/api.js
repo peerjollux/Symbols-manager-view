@@ -65,7 +65,8 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
   targetPath.push(item)
 
   // Create sorted copy of target column
-  const sortedTarget = _.sortBy(targetPath, 'name')
+  let sortedTarget = _.sortBy(targetPath, 'name')
+  sortedTarget = _.sortBy(sortedTarget, 'type')
 
   // For some reason we can not directly do targetPath=sortedTarget
   // That's why we first empty the array and than push new sortedarray into it
