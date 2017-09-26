@@ -44,7 +44,7 @@ const getPathString = (pathArray) => {
 
 
 export const moveItem = (symbols, selected, itemPath, targetColumn) => {
-  const symbolsCopy = Object.assign([], symbols);
+  let symbolsCopy = Object.assign([], symbols);
   const symbolsPath = getParentPathString(itemPath)
 
   const parentPath = resolvePath(symbolsCopy, symbolsPath)
@@ -53,8 +53,6 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
 
   // Get item to move
   const item = parentPath[lastIndex]
-
-
   // Remove item from symbols list
   parentPath.splice(lastIndex, 1)
 
@@ -88,16 +86,17 @@ export const getList = (selectedIndex) => {
 
 
         const tempList = resolvePath(symbols, path);
-
-        if(tempList.hasOwnProperty('children')){
-          path += '.children'
+        if(tempList){
+          if(tempList.hasOwnProperty('children')){
+            path += '.children'
+          }
         }
       }
     })
   }
 
   let list = resolvePath(symbols, path);
-  if(list.length === undefined){
+  if(list === undefined){
       // If last item in list is a symbol, we don;t show the last column
       list = null
   }
