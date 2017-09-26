@@ -56,7 +56,7 @@ class Column extends Component {
 
   renderListItems(){
     const { list, columnIndex } = this.props
-
+    
     return (
       list.map((item, rowIndex) => {
 
@@ -79,7 +79,7 @@ class Column extends Component {
   }
 
   render(){
-    
+
     const {
       className,
       connectDropTarget,

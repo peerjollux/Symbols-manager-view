@@ -24,7 +24,6 @@ class AppComponent extends React.Component {
 
   onDrop(columnIndex){
     let { symbols, selected, lastClicked } = this.props
-    console.log(columnIndex)
     let payload = API.moveItem(symbols, selected, lastClicked, columnIndex);
 
     return this.props.dropItem(payload)

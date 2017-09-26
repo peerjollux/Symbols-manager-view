@@ -1,5 +1,15 @@
 const Symbols = [
   {
+    name: 'components',
+    type: 'folder',
+    children: [
+      {
+        name: 'default compopnet',
+        type: 'symbol'
+      }
+    ]
+  },
+  {
     name: 'elements',
     type: 'folder',
     children: [
@@ -36,16 +46,6 @@ const Symbols = [
             type: 'symbol'
           }
         ]
-      }
-    ]
-  },
-  {
-    name: 'components',
-    type: 'folder',
-    children: [
-      {
-        name: 'default compopnet',
-        type: 'symbol'
       }
     ]
   },

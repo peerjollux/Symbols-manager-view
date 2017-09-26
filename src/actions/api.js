@@ -3,7 +3,6 @@ import store from '../stores'
 import _ from 'underscore'
 
 
-
 const getParentPathString = (pathArray) => {
   let symbolsPath = '';
   const pathLength = pathArray.length;
@@ -62,7 +61,16 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
   targetPath = getPathString(targetPath)
   targetPath = resolvePath(symbolsCopy, targetPath)
 
+  // Add new item to array
   targetPath.push(item)
+
+  // Create sorted copy of target column
+  const sortedTarget = _.sortBy(targetPath, 'name')
+
+  // For some reason we can not directly do targetPath=sortedTarget
+  // That's why we first empty the array and than push new sortedarray into it
+  targetPath.length = 0
+  targetPath.push(...sortedTarget)
 
   return symbolsCopy
 }
@@ -96,9 +104,10 @@ export const getList = (selectedIndex) => {
   }
 
   let list = resolvePath(symbols, path);
-  if(list === undefined){
-      // If last item in list is a symbol, we don;t show the last column
-      list = null
+
+  // If last item in list is a symbol, we return an empty list
+  if(list === undefined || list.length === undefined){
+    list = null
   }
 
   return list;
