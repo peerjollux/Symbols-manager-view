@@ -101,13 +101,11 @@ class Column extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    symbols: state.SymbolsReducer.symbols,
-    selected: state.SelectionReducer.selected
-  }
-};
+function mapStateToProps(state) {
+  const { symbols, selected } = state.SymbolsReducer
+  return { symbols, selected }
+}
 
 
-const ColumnWithData = connect(mapStateToProps, { selectItem, clickItem })(Column)
-export default DropTarget(ItemTypes.LISTITEM, listItemTarget, collect)(ColumnWithData);
+Column = connect(mapStateToProps, { selectItem, clickItem })(Column)
+export default DropTarget(ItemTypes.LISTITEM, listItemTarget, collect)(Column);

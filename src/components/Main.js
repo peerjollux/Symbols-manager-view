@@ -67,13 +67,11 @@ class AppComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    symbols: state.SymbolsReducer.symbols,
-    selected: state.SelectionReducer.selected,
-    lastClicked: state.SelectionReducer.lastClicked
-  }
+function mapStateToProps(state) {
+  const { symbols, selected, lastClicked } = state.SymbolsReducer
+  return { symbols, selected, lastClicked  }
 }
+
 
 AppComponent = connect(mapStateToProps, {dropItem, selectParent, selectNext})(AppComponent)
 export default DragDropContext(HTML5Backend)(AppComponent)

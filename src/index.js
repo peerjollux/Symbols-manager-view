@@ -2,16 +2,10 @@ import 'core-js/fn/object/assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import reducers from './reducers'
-import ReduxThunk from 'redux-thunk'
 import App from './components/Main'
+import configureStore from './configureStore'
 
-const store = createStore(
-  reducers,
-  {},
-  applyMiddleware(ReduxThunk)
-);
+const store = configureStore()
 
 // Render the main component into the dom
 ReactDOM.render(
