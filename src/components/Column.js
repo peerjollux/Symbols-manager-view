@@ -31,7 +31,7 @@ const listItemTarget = {
 
     return true
   },
-  drop(props, monitor, component) {
+  drop(props) {
     const { onDrop, columnIndex } = props;
     onDrop(columnIndex);
   }
@@ -55,13 +55,13 @@ class Column extends Component {
   }
 
   renderListItems(){
-    const { list, columnIndex } = this.props
+    const { list, columnIndex, selected } = this.props
 
     return (
       list.map((item, rowIndex) => {
 
-        const isSelected = API.isSelected(columnIndex, rowIndex);
-        const itemPath = API.getItemPath(columnIndex, rowIndex);
+        const isSelected = API.isSelected({ selected }, {columnIndex, rowIndex});
+        const itemPath = API.getItemPath({selected}, {columnIndex, rowIndex});
 
         return (
           <ListItem

@@ -5,9 +5,7 @@ import React from 'react';
 import Column from './Column'
 import * as API from '../actions/api'
 import { DragDropContext } from 'react-dnd';
-import KeyboardShortcuts from '../actions/KeyboardShortcuts'
 import HTML5Backend from 'react-dnd-html5-backend';
-import keydown, { ALL_KEYS } from 'react-keydown'
 import {
   dropItem,
   selectParent,
@@ -34,12 +32,12 @@ class AppComponent extends React.Component {
   }
 
   renderColumns(){
-    const { lastClicked, selected } = this.props
+    const { lastClicked, selected, symbols } = this.props
     const columns = this.getColumns()
 
     return (
       columns.map((selectedIndex, columnIndex) => {
-        const list = API.getList(selectedIndex);
+        const list = API.getList({selected, symbols}, {selectedIndex});
 
         if(list){
           return (
@@ -59,28 +57,6 @@ class AppComponent extends React.Component {
   }
 
   render() {
-    const { keydown } = this.props
-    if ( keydown.event ) {
-      switch (keydown.event.which) {
-        case keyCodes.left:
-          return this.props.selectParent()
-          break;
-        case keyCodes.up:
-          up();
-          break;
-        case keyCodes.right:
-          right();
-          break;
-        case keyCodes.down:
-          console.log('test')
-          break;
-        case keyCodes.enter:
-          enter();
-          break;
-        default:
-      }
-    }
-
     return (
       <div className='window' >
         <div className='columns-wrapper'>
@@ -91,15 +67,6 @@ class AppComponent extends React.Component {
   }
 }
 
-const keys = [ 37, 38, 39, 40, 13 ]
-const keyCodes = {
-  left: 37,
-  up: 38,
-  right: 39,
-  down: 40,
-  enter: 13
-}
-
 const mapStateToProps = state => {
   return {
     symbols: state.SymbolsReducer.symbols,
@@ -108,6 +75,5 @@ const mapStateToProps = state => {
   }
 }
 
-AppComponent = keydown(keys)(AppComponent);
 AppComponent = connect(mapStateToProps, {dropItem, selectParent, selectNext})(AppComponent)
 export default DragDropContext(HTML5Backend)(AppComponent)

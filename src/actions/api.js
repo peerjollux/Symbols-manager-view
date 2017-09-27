@@ -1,5 +1,4 @@
 const resolvePath = require('object-resolve-path');
-import store from '../stores'
 import _ from 'underscore'
 
 
@@ -48,7 +47,6 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
 
   const parentPath = resolvePath(symbolsCopy, symbolsPath)
   const lastIndex = itemPath[itemPath.length - 1]
-  const lastSelectedIndex = selected[selected.length - 1]
 
   // Get item to move
   const item = parentPath[lastIndex]
@@ -79,11 +77,9 @@ export const moveItem = (symbols, selected, itemPath, targetColumn) => {
 /**
  * getList() returns a array of a item objects.
  */
-export const getList = (selectedIndex) => {
-
-  const state = store.getState()
-  const { symbols } = state.SymbolsReducer;
-  const { selected } = state.SelectionReducer;
+export const getList = (state, props) => {
+  const { symbols, selected } = state;
+  const { selectedIndex } = props;
 
   let path = '';
 
@@ -196,9 +192,9 @@ export const renameItem = (state) => {
   }
 }
 
-export const isSelected = (columnIndex, rowIndex) => {
-  let state = store.getState()
-  let { selected } = state.SelectionReducer;
+export const isSelected = (state, props) => {
+  let { selected } = state;
+  let { columnIndex, rowIndex } = props;
 
   if (rowIndex == selected[columnIndex]) {
     return true;
@@ -239,9 +235,10 @@ export const saveItem = (state, props) => {
 }
 
 
-export const getItemPath = (columnIndex, rowIndex) => {
-  let state = store.getState()
-  let { selected } = state.SelectionReducer;
+export const getItemPath = (state, props) => {
+
+  let { selected } = state
+  const { columnIndex, rowIndex } = props
 
   let itemPath = []
 

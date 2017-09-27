@@ -1,8 +1,7 @@
 import {
   SELECT_ITEM,
   CLICK_ITEM,
-  RESET_SELECTED,
-  SELECT_PARENT
+  RESET_SELECTED
 } from '../contstants/actionTypes'
 
 
@@ -27,13 +26,3 @@ export const resetSelected = (payload) => {
     payload
   };
 };
-
-export const selectParent = () => {
-  return (dispatch) => {
-    dispatch(selectItem([0, 0]))
-  }
-}
-
-export const selectNext = () => {
-
-}
