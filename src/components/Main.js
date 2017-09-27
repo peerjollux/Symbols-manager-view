@@ -5,9 +5,13 @@ import React from 'react';
 import Column from './Column'
 import * as API from '../actions/api'
 import { DragDropContext } from 'react-dnd';
+import KeyboardShortcuts from '../actions/KeyboardShortcuts'
 import HTML5Backend from 'react-dnd-html5-backend';
+import keydown, { ALL_KEYS } from 'react-keydown'
 import {
-  dropItem
+  dropItem,
+  selectParent,
+  selectNext
 } from '../actions';
 import { connect } from 'react-redux';
 
@@ -55,12 +59,45 @@ class AppComponent extends React.Component {
   }
 
   render() {
+    const { keydown } = this.props
+    if ( keydown.event ) {
+      switch (keydown.event.which) {
+        case keyCodes.left:
+          return this.props.selectParent()
+          break;
+        case keyCodes.up:
+          up();
+          break;
+        case keyCodes.right:
+          right();
+          break;
+        case keyCodes.down:
+          console.log('test')
+          break;
+        case keyCodes.enter:
+          enter();
+          break;
+        default:
+      }
+    }
+
     return (
-      <div className='columns-wrapper'>
-        { this.renderColumns() }
+      <div className='window' >
+        <div className='columns-wrapper'>
+          { this.renderColumns() }
+        </div>
       </div>
     )
   }
+}
+
+const keys = [ 37, 38, 39, 40, 13 ]
+const keyCodes = {
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+  enter: 13
 }
 
 const mapStateToProps = state => {
@@ -71,5 +108,6 @@ const mapStateToProps = state => {
   }
 }
 
-const AppComponentWithData = connect(mapStateToProps, {dropItem})(AppComponent)
-export default DragDropContext(HTML5Backend)(AppComponentWithData)
+AppComponent = keydown(keys)(AppComponent);
+AppComponent = connect(mapStateToProps, {dropItem, selectParent, selectNext})(AppComponent)
+export default DragDropContext(HTML5Backend)(AppComponent)

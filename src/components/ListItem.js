@@ -6,7 +6,7 @@ const listItemSource = {
   beginDrag: function(){
     return {};
   }
-  
+
 }
 
 function collect(connect, monitor) {
@@ -18,9 +18,8 @@ function collect(connect, monitor) {
   )
 }
 
+
 class ListItem extends Component {
-
-
   render(){
     const {
       data,
@@ -50,7 +49,6 @@ class ListItem extends Component {
         className={classNames}
         onClick = {onClick}
         onMouseDown = {onMouseDown}
-
         style={{
           opacity: isDragging ? 0.9 : 1
         }}

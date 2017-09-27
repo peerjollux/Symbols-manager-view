@@ -1,21 +1,45 @@
-const KeyboardEvents = props => {
-  const { left, up, right, down, enter } = props;
+const resolvePath = require('object-resolve-path');
+import store from '../stores'
+import _ from 'underscore'
 
-  const keyCodes = {
-    left: 37,
-    up: 38,
-    right: 39,
-    down: 40,
-    enter: 13
+const keyCodes = {
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+  enter: 13
+}
+
+const selectItemUp = () => {
+
+}
+
+const selectItemDown = () => {
+
+}
+
+const selectParent = () => {
+  const state = store.getState()
+  const { selected } = state.SelectionReducer;
+
+  if(selected.length < 0){
+    selected.slice[0, selected.length]
   }
+}
 
+const selectChild = () => {
+
+
+}
+
+const KeyboardShortcuts = ({left, down}) => {
 
   addEvent(document, 'keydown', function (e) {
       e = e || window.event;
 
       switch (e.keyCode) {
         case keyCodes.left:
-          return left();
+          return left()
           break;
         case keyCodes.up:
           up();
@@ -24,8 +48,7 @@ const KeyboardEvents = props => {
           right();
           break;
         case keyCodes.down:
-          console.log('test')
-          return down();
+          console.log('test keydown')
           break;
         case keyCodes.enter:
           enter();
@@ -46,4 +69,4 @@ const KeyboardEvents = props => {
   }
 }
 
-export default KeyboardEvents;
+export default KeyboardShortcuts

@@ -14,7 +14,7 @@ const Symbols = [
     type: 'folder',
     children: [
       {
-        name: 'avaters',
+        name: 'alerts',
         type: 'folder',
         children: [
           {
@@ -28,7 +28,7 @@ const Symbols = [
         ]
       },
       {
-        name: 'alerts',
+        name: 'avaters',
         type: 'folder',
         children: [
           {
